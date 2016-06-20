@@ -1,0 +1,1 @@
+<p>If checked, the plugin will create a revolving toolbar link at the top of your site showing your partner merchants' latest deals.</p>
