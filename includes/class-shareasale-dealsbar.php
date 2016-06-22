@@ -43,7 +43,6 @@ class ShareASale_Dealsbar {
         $admin = new ShareASale_Dealsbar_Admin( $this->get_version() );
         $this->loader->add_action( 'admin_enqueue_scripts', $admin, 'enqueue_styles' );
         $this->loader->add_action( 'admin_enqueue_scripts', $admin, 'enqueue_scripts' );
-        $this->loader->add_action( 'add_meta_boxes',        $admin, 'add_meta_box' );
         $this->loader->add_action( 'admin_init',            $admin, 'admin_init' );
         $this->loader->add_action( 'admin_menu',            $admin, 'admin_menu' );
  
