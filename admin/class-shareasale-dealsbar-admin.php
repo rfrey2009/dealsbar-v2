@@ -279,14 +279,14 @@ class ShareASale_Dealsbar_Admin {
     private function render_settings_optgroup( $optgroups ){
         $template = str_repeat( file_get_contents( plugin_dir_path( __FILE__ ) . 'templates/shareasale-dealsbar-settings-optgroup.php' ), count($optgroups))
 
-        foreach ($optgroups as $optgroup) {
-            $template = preg_replace('/{{label}}/', $optgroup->label, $template, 1);
+        foreach ($optgroups as $label) {
+            $template = preg_replace('/{{label}}/', $label, $template, 1);
         }
 
         return $template;
     }
 
-    private function render_settings_option( $args ){
+    private function render_settings_option( $options ){
         $template  = file_get_contents( plugin_dir_path( __FILE__ ) . 'templates/shareasale-dealsbar-settings-option.php' );
 
         return $template;
