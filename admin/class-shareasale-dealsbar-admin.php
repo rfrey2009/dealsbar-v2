@@ -4,9 +4,12 @@ class ShareASale_Dealsbar_Admin {
      /**
    * @var float $version Plugin version, used for cache-busting
    */
-	private $version;
+	private $wpdb, $version;
  
     public function __construct( $version ) {
+        global $wpdb;
+
+        $this->wpdb    = &$wpdb;
         $this->version = $version;
     }
 
@@ -188,7 +191,13 @@ class ShareASale_Dealsbar_Admin {
             ));
         add_settings_field('ToolbarMerchants', 'Include These Merchants Random Deals (at least one) <br> <i>ctrl+click to select multiple</i>', array( $this, 'render_settings_select'), 'dealsbar', 'dealsbar_Toolbar', array(
             'label_for' => 'ToolbarMerchants',
-            'status'    => @$options['ToolbarSetting'] ? '' : 'disabled'
+            'id'        => 'ToolbarMerchants',
+            'name'      => 'ToolbarMerchants',
+            'status'    => @$options['ToolbarSetting'] ? '' : 'disabled',
+            'optgroups' => $this->wpdb->get_col("SELECT DISTINCT merchantid FROM " . $this->wpdb->prefix . "deals ORDER BY merchantid"),
+            'options'   => $this->wpdb->get_results("SELECT DISTINCT merchantid as label, merchant as value FROM " . $this->wpdb->prefix . "deals ORDER BY merchantid"),
+            'selected'  => @$options['ToolbarMerchants']
+
         ));
     }
 
@@ -196,7 +205,6 @@ class ShareASale_Dealsbar_Admin {
     * Method to wrap the WordPress admin_menu_page() function
     */
     public function admin_menu() {
- 
         // Add the top-level admin menu
         $page_title = 'ShareASale Dealsbar Settings';
         $menu_title = 'Dealsbar';
@@ -236,55 +244,51 @@ class ShareASale_Dealsbar_Admin {
     }
 
     public function render_settings_toolbar_section_text() {
-        require_once plugin_dir_path( __FILE__ ) . 'templates/shareasale-dealsbar-settings-affiliate-id-text.php';
-    }
-    
-    public function render_settings_input($args) {
-
-        $template  = file_get_contents(plugin_dir_path( __FILE__ ) . 'templates/shareasale-dealsbar-settings-input.php');
-        $templateData = array_map( 'esc_attr', $args );
-        
-        foreach ($templateData as $key => $value){
-          $template = str_replace ( "{{$key}}", $value, $template );
-        }
-
-        echo $template; 
+        require_once plugin_dir_path( __FILE__ ) . 'templates/shareasale-dealsbar-settings-toolbar-section-text.php';
     }
 
     public function render_settings_slider(){ //renders the jquery slider for toolbar settings
         require_once plugin_dir_path( __FILE__ ) . 'templates/shareasale-dealsbar-settings-slider.php'; 
     }
-
-    public function render_settings_select($args){ //one-time function that renders select box for toolbar settings
-
-        global $wpdb;
-        $options = get_option( 'dealsbar_options' );
-        //if no merchants selected, make an empty array for the sake of later arguments
-        @$options['ToolbarMerchants'] = empty(@$options['ToolbarMerchants']) ? array() : @$options['ToolbarMerchants'];
-        //gotta grab what merchants we even have deals for...
-        $deals_table = $wpdb->prefix . 'deals';      
-        $merchants_with_deals = $wpdb->get_results("SELECT DISTINCT merchant, merchantid FROM $deals_table ORDER BY merchantid");
-        //status is disabled if the deals toolbar checkbox wasn't checked
-        $status = $args['status'];
-        //in case no merchants are selected yet, set the first in the list to selected instead. Must have at least one merchant for deals toolbar to work
-        $default = (empty(@$options['ToolbarMerchants']) ? 'selected ': '');
-
-        echo "<select multiple id='ToolbarMerchants' name='dealsbar_options[Toolbar Merchants][]' $status>";
-        if (empty($merchants_with_deals))
-
-        echo '<option disabled>No merchants with deals yet. Click below to save.</option>';
-
-        foreach ($merchants_with_deals as $merchant_with_deal) {
-
-            if($merchant_with_deal->merchantid != $curmerchantid){
-              echo '<optgroup label = "Merchant ID: ' . $merchant_with_deal->merchantid . '">';
-            }
-
-            echo '<option ' . $default . 'value="' . $merchant_with_deal->merchant . '"' . (in_array($merchant_with_deal->merchant, @$options['ToolbarMerchants']) ? 'selected' : '') . '>' . $merchant_with_deal->merchant . '</option>';
-                $default = '';
-                $curmerchantid = $merchant_with_deal->merchantid;
-
+    
+    public function render_settings_input( $args ) {
+        $template  = file_get_contents( plugin_dir_path( __FILE__ ) . 'templates/shareasale-dealsbar-settings-input.php' );
+        //$templateData = array_map( 'esc_attr', $args );
+        $templateData = $args;
+        
+        foreach ($templateData as $key => $value){
+          $template = str_replace( "{{$key}}", $value, $template );
         }
-        echo "</select>";
+
+        echo $template; 
+    }
+
+    public function render_settings_select( $args ){ //renders select box for toolbar settings
+        $template  = file_get_contents( plugin_dir_path( __FILE__ ) . 'templates/shareasale-dealsbar-settings-select.php' );
+        $templateData = array_map( 'esc_attr', $args );
+        
+        foreach ($templateData as $key => $value){
+          $template = str_replace( "{{$key}}", $value, $template );
+        }
+
+        $template = str_replace( '{{optgroups}}', $this->render_settings_optgroup( $templateData['optgroups'] ), $template );
+        
+        echo $template;
+    }
+
+    private function render_settings_optgroup( $optgroups ){
+        $template = str_repeat( file_get_contents( plugin_dir_path( __FILE__ ) . 'templates/shareasale-dealsbar-settings-optgroup.php' ), count($optgroups))
+
+        foreach ($optgroups as $optgroup) {
+            $template = preg_replace('/{{label}}/', $optgroup->label, $template, 1);
+        }
+
+        return $template;
+    }
+
+    private function render_settings_option( $args ){
+        $template  = file_get_contents( plugin_dir_path( __FILE__ ) . 'templates/shareasale-dealsbar-settings-option.php' );
+
+        return $template;
     }
 }
