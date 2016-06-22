@@ -59,6 +59,7 @@ class ShareASale_Dealsbar_Admin {
     }
  
     public function admin_init() {
+        $options = get_option( 'dealsbar_options' );
         register_setting( 'dealsbar_options', 'dealsbar_options', 'dealsbar_sanitize' );
 
         //API settings
@@ -191,10 +192,13 @@ class ShareASale_Dealsbar_Admin {
             ));
 
         $results = array();
-        //relies on a PHP >=5.3 lambda fn
+        //relies on a PHP >=5.3 lambda fn. must do this to get the correct data structure back from the db using WordPress' $wpdb abstraction
         array_walk( $this->wpdb->get_results( "SELECT DISTINCT merchant as value, merchantid as label FROM " . $this->wpdb->prefix . "deals ORDER BY merchantid", OBJECT_K ),
-            function( $obj ) use ( &$results ){
-                $results[$obj->label][] = array( 'value' => $obj->value );
+            function( $obj ) use ( &$results, $options ){
+                $results[$obj->label][] = array( 
+                                            'value'    => $obj->value,
+                                            'selected' => ( is_array( @$options['ToolbarMerchants'] ) && in_array( $obj->value, @$options['ToolbarMerchants'] ) ? 'selected' : '' )
+                                        );
             }
         );
 
@@ -203,8 +207,7 @@ class ShareASale_Dealsbar_Admin {
             'id'        => 'ToolbarMerchants',
             'name'      => 'ToolbarMerchants',
             'status'    => @$options['ToolbarSetting'] ? '' : 'disabled',
-            'optgroups' => $results,
-            'selected'  => @$options['ToolbarMerchants']
+            'optgroups' => $results
         ));
     }
 
@@ -254,7 +257,7 @@ class ShareASale_Dealsbar_Admin {
         require_once plugin_dir_path( __FILE__ ) . 'templates/shareasale-dealsbar-settings-toolbar-section-text.php';
     }
 
-    public function render_settings_slider(){ //renders the jquery slider for toolbar settings
+    public function render_settings_slider(){
         require_once plugin_dir_path( __FILE__ ) . 'templates/shareasale-dealsbar-settings-slider.php'; 
     }
     
@@ -265,38 +268,48 @@ class ShareASale_Dealsbar_Admin {
         foreach ($templateData as $macro => $value){
           $template = str_replace( "{{$macro}}", $value, $template );
         }
-
         echo $template; 
     }
 
-    public function render_settings_select( $args ){ //renders select box for toolbar settings
+    public function render_settings_select( $args ){
         $template  = file_get_contents( plugin_dir_path( __FILE__ ) . 'templates/shareasale-dealsbar-settings-select.php' );
-        //$templateData = array_map( 'esc_attr', $args ); --can't do array to string conversion here for $templateData['optgroups']...
-        $templateData = $args;
+        $templateData = array_map( function( $arg ){
+
+            if(gettype($arg) == 'string') return esc_attr($arg);
+
+            return $arg;            
+
+        }, $args );
 
         foreach ($templateData as $macro => $value){
-          $template = str_replace( "{{$macro}}", $value, $template );
+            if (gettype($value) == 'string')
+                $template = str_replace( "{{$macro}}", $value, $template );
         }
 
-        $template = str_replace( '{{optgroups}}', $this->render_settings_optgroup( $templateData['optgroups'] ), $template );
+        $template = str_replace( '{{optgroups}}', $this->render_settings_select_optgroup( $templateData['optgroups'] ), $template );
         echo $template;
     }
 
-    private function render_settings_optgroup( $optgroups = array() ){
-        $template = str_repeat( file_get_contents( plugin_dir_path( __FILE__ ) . 'templates/shareasale-dealsbar-settings-optgroup.php' ), count($optgroups) );
+    private function render_settings_select_optgroup( $optgroups = array( 'No Merchant' => array(
+                                                                                            'value' => 'No Merchants with deals yet. Click below to save.',
+                                                                                            'selected' => ''
+                                                                                        )
+                                                                        ) ){
+        $template = str_repeat( file_get_contents( plugin_dir_path( __FILE__ ) . 'templates/shareasale-dealsbar-settings-select-optgroup.php' ), count($optgroups) );
 
         foreach ($optgroups as $optgroup => $options) {
             $template = preg_replace( '/{{label}}/', $optgroup, $template, 1 );
-            $template = str_replace( '{{options}}', $this->render_settings_option( $options ), $template );
+            $template = str_replace( '{{options}}', $this->render_settings_select_optgroup_option( $options ), $template );
         }
         return $template;
     }
 
-    private function render_settings_option( $options ){
-        $template = str_repeat( file_get_contents( plugin_dir_path( __FILE__ ) . 'templates/shareasale-dealsbar-settings-option.php' ), count($options) );
+    private function render_settings_select_optgroup_option( $options ){
+        $template = str_repeat( file_get_contents( plugin_dir_path( __FILE__ ) . 'templates/shareasale-dealsbar-settings-select-optgroup-option.php' ), count($options) );
 
         foreach ($options as $option){
-          $template = str_replace( "{{$macro}}", $option['value'], $template );
+          $template = str_replace( '{{value}}', $option['value'], $template );
+          $template = str_replace( '{{selected}}', $option['selected'], $template );
         }
         return $template;
     }
