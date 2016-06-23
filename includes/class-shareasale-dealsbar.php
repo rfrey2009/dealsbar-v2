@@ -11,7 +11,7 @@ class ShareASale_Dealsbar {
  
     public function __construct() {
  
-        $this->plugin_slug = 'shareasale_dealsbar-slug';
+        $this->plugin_slug = 'shareasale-dealsbar-slug';
         $this->version     = '1.2';
  
         $this->load_dependencies();
@@ -24,13 +24,13 @@ class ShareASale_Dealsbar {
     */
     private function load_dependencies() {
         /** 
-        * This WordPress option will store the affiliate ID
+        * This WordPress option will store the Affiliate ID
         */
         add_option( 'dealsbar_options', '' );
 
-        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-shareasale_dealsbar-admin.php';
+        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-shareasale-dealsbar-admin.php';
  
-        require_once plugin_dir_path( __FILE__ ) . 'class-shareasale_dealsbar-loader.php';
+        require_once plugin_dir_path( __FILE__ ) . 'class-shareasale-dealsbar-loader.php';
         $this->loader = new ShareASale_Dealsbar_Loader();
     }
 

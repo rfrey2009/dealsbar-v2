@@ -12,7 +12,7 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 //require the core plugin class
-require_once plugin_dir_path( __FILE__ ) . 'includes/class-shareasale_dealsbar.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-shareasale-dealsbar.php';
 
 /**
 * Kicks off the plugin init

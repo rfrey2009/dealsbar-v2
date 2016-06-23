@@ -1,1 +1,1 @@
-<optgroup label = "Merchant ID: {{label}}">{{options}}</optgroup>
+<optgroup label = "Merchant ID: !!label!!">!!options!!</optgroup>

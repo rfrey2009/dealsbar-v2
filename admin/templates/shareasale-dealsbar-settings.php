@@ -14,7 +14,7 @@
 
 ?>
   <div>    
-    <h2><img src = <?php echo '"' . plugin_dir_url( __FILE__ ) . 'images/star_big2.png"' ?>>ShareASale Dealsbar Settings</h2>
+    <h2><img src = <?php echo '"' . plugin_dir_url( __FILE__ ) . '../images/star_big2.png"' ?>>ShareASale Dealsbar Settings</h2>
     <form action="options.php" method="post">
     <div id = 'dealsbar_options'>
     <?php
