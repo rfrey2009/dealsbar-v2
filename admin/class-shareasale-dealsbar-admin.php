@@ -302,12 +302,14 @@ class ShareASale_Dealsbar_Admin {
 
     private function render_settings_select_optgroup( $optgroups ){
         if( empty( $optgroups ) ) {
-            $optgroups = array( 'None'  => array( 
-                                                    array(
-                                                        'value'    => 'No Merchants with deals yet. Click below to save.',
-                                                        'selected' => 'disabled'
-                                    ) )
-                         );
+            $optgroups = array( 'None'  => 
+                                        array( 
+                                            array(
+                                                'value'    => 'No Merchants with deals yet. Click below to save.',
+                                                'selected' => 'disabled'
+                                            )
+                                        )
+                                    );
         }
         $template = str_repeat( file_get_contents( plugin_dir_path( __FILE__ ) . 'templates/shareasale-dealsbar-settings-select-optgroup.php' ), count($optgroups) );
 
