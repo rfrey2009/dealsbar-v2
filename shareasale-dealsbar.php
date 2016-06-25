@@ -19,8 +19,8 @@ require_once plugin_dir_path( __FILE__ ) . 'includes/class-shareasale-dealsbar.p
 */
 function run_shareasale_dealsbar() {
  
-    $sasdlsbr = new ShareASale_Dealsbar();
-    $sasdlsbr->run();
+    $sas_dlsbr = new ShareASale_Dealsbar();
+    $sas_dlsbr->run();
  
 }
 
