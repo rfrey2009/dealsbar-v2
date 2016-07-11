@@ -1,12 +1,10 @@
-<?php namespace ShareASale;
-//ShareASale API Adapter by ryan@ryanfrey.com
-//i.e. $adapter = (new API($apiToken, $apiSecret, $merchantID))->voidTrans($orderNumber, $date)->exec();
+<?php
 class API{
 
-	private $apiVersion = 2.6;
+	private $apiVersion = 2.8;
 	private $apiToken;
 	private $apiSecret;
-	private $merchantID;
+	private $affiliate_id;
 	private $headers;
 	private $timestamp;
 	private $action;
@@ -15,12 +13,11 @@ class API{
 	private $errorMsg;
 	private $response;
 
-	public function __construct($apiToken, $apiSecret, $merchantID) {
+	public function __construct($apiToken, $apiSecret, $affiliate_id) {
 		$this->apiToken   = $apiToken;
 		$this->apiSecret  = $apiSecret;
-		$this->merchantID = $merchantID;
+		$this->affiliate_id = $affiliate_id;
 		$this->timestamp  = gmdate(DATE_RFC1123); //maybe move this to authenticate() so it's set at request time and not instantiation?
-
 		return $this;
 	}
 
@@ -28,7 +25,7 @@ class API{
 		$protocol    = 'https://';
 		$hostname    = 'api.shareasale.com/';
 		$handler     = 'w.cfm';
-		$params      = array_merge(['action'=>$this->action, 'merchantID'=>$this->merchantID, 'token'=>$this->apiToken, 'version'=>$this->apiVersion], $params);
+		$params      = array_merge(['action'=>$this->action, 'affiliate_id'=>$this->affiliate_id, 'token'=>$this->apiToken, 'version'=>$this->apiVersion], $params);
 		$queryString = '?' . http_build_query($params);
 		$url = $protocol . $hostname . $handler . $queryString;		
 		return $url;
@@ -91,8 +88,8 @@ class API{
 	}
 
 	//getters
-	public function getMerchantId(){
-		return $this->merchantID;
+	public function getaffiliate_id(){
+		return $this->affiliate_id;
 	}
 
 	//getters and setters

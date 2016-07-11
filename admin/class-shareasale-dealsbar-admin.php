@@ -33,7 +33,7 @@ class ShareASale_Dealsbar_Admin {
     public function enqueue_scripts( $hook ) {
         $options = get_option( 'dealsbar_options' );
 
-        if( $hook == 'post.php' && @$options['AffiliateID'] ) {
+        if( $hook == 'post.php' && @$options['affiliate-id'] ) {
 
             wp_register_script(
                 'shareasale-dealsbar-admin-js',
@@ -59,144 +59,144 @@ class ShareASale_Dealsbar_Admin {
  
     public function admin_init() {
         $options = get_option( 'dealsbar_options' );
-        register_setting( 'dealsbar_options', 'dealsbar_options'/*, 'dealsbar_sanitize'*/ );
+        register_setting( 'dealsbar_options', 'dealsbar_options' /*, array( $this, 'dealsbar_sanitize' ) */ );
 
-        //API settings
-        add_settings_section( 'dealsbar_api', 'API Settings', array( $this, 'render_settings_api_section_text'), 'shareasale_dealsbar' );
-        add_settings_field( 'AffiliateID', 'Affiliate ID', array( $this, 'render_settings_input'), 'shareasale_dealsbar', 'dealsbar_api', array(
-            'label_for'   => 'AffiliateID',
-            'id'          => 'AffiliateID',
-            'name'        => 'AffiliateID',
-            'value'       => @$options['AffiliateID'],
+        //API settings... so much boilerplate WordPress code...
+        add_settings_section( 'dealsbar_api', 'API Settings', array( $this, 'render_settings_api_section_text' ), 'shareasale_dealsbar' );
+        add_settings_field( 'affiliate-id', 'Affiliate ID', array( $this, 'render_settings_input' ), 'shareasale_dealsbar', 'dealsbar_api', array(
+            'label_for'   => 'affiliate-id',
+            'id'          => 'affiliate-id',
+            'name'        => 'affiliate-id',
+            'value'       => @$options['affiliate-id'],
             'status'      => '',
-            'size'        => 16,
+            'size'        => 18,
             'type'        => 'text',
             'placeholder' => 'Enter your Affiliate ID',
-            'class'       => 'dealsbar_option',
+            'class'       => 'dealsbar-option',
             'extra'       => ''
         ));  
-        add_settings_field( 'APIToken', 'API Token', array( $this, 'render_settings_input'), 'shareasale_dealsbar', 'dealsbar_api', array(
-            'label_for'   => 'APIToken',
-            'id'          => 'APIToken',
-            'name'        => 'APIToken',
-            'value'       => @$options['APIToken'],
+        add_settings_field( 'api-token', 'API Token', array( $this, 'render_settings_input' ), 'shareasale_dealsbar', 'dealsbar_api', array(
+            'label_for'   => 'api-token',
+            'id'          => 'api-token',
+            'name'        => 'api-token',
+            'value'       => @$options['api-token'],
             'status'      => '',
             'size'        => 18,
             'type'        => 'text',
             'placeholder' => 'Enter your API Token',
-            'class'       => 'dealsbar_option',
+            'class'       => 'dealsbar-option',
             'extra'       => ''
         ));
-        add_settings_field( 'APIKey', 'API Key', array( $this, 'render_settings_input'), 'shareasale_dealsbar', 'dealsbar_api', array(
-            'label_for'   => 'APIKey',
-            'id'          => 'APIKey',
-            'name'        => 'APIKey',
-            'value'       => @$options['APIKey'],
+        add_settings_field( 'api-key', 'API Key', array( $this, 'render_settings_input' ), 'shareasale_dealsbar', 'dealsbar_api', array(
+            'label_for'   => 'api-key',
+            'id'          => 'api-key',
+            'name'        => 'api-key',
+            'value'       => @$options['api-key'],
             'status'      => '',
             'size'        => 34,
             'type'        => 'text',
             'placeholder' => 'Enter your API Key',
-            'class'       => 'dealsbar_option',
+            'class'       => 'dealsbar-option',
             'extra'       => ''
         ));
           
         //dealsbar settings
-        add_settings_section( 'dealsbar_Toolbar', 'Dealsbar', array( $this, 'render_settings_toolbar_section_text'), 'shareasale_dealsbar' );
-        add_settings_field( 'ToolbarSetting', 'Dealsbar Enabled', array( $this, 'render_settings_input'), 'shareasale_dealsbar', 'dealsbar_Toolbar', array(
-            'label_for'   => 'ToolbarSetting',
-            'id'          => 'ToolbarSetting',
-            'name'        => 'ToolbarSetting',
+        add_settings_section( 'dealsbar_toolbar', 'Dealsbar', array( $this, 'render_settings_toolbar_section_text' ), 'shareasale_dealsbar' );
+        add_settings_field( 'toolbar-setting', 'Dealsbar Enabled', array( $this, 'render_settings_input' ), 'shareasale_dealsbar', 'dealsbar_toolbar', array(
+            'label_for'   => 'toolbar-setting',
+            'id'          => 'toolbar-setting',
+            'name'        => 'toolbar-setting',
             'value'       => 1,
-            'status'      => checked( @$options['ToolbarSetting'], 1, false ),
+            'status'      => checked( @$options['toolbar-setting'], 1, false ),
             'size'        => '',
             'type'        => 'checkbox',
             'placeholder' => '',
-            'class'       => 'dealsbar_option',
+            'class'       => 'dealsbar-option',
             'extra'       => ''
         ));
-        add_settings_field( 'ToolbarText', 'Dealsbar Text', array( $this, 'render_settings_input'), 'shareasale_dealsbar', 'dealsbar_Toolbar', array(
-            'label_for'   => 'ToolbarText',
-            'id'          => 'ToolbarText',
-            'name'        => 'ToolbarText',
-            'value'       => @$options['ToolbarText'],
-            'status'      => checked( @$options['ToolbarSetting'], 1, false ) ? '' : 'disabled',
+        add_settings_field( 'toolbar-text', 'Dealsbar Text', array( $this, 'render_settings_input' ), 'shareasale_dealsbar', 'dealsbar_toolbar', array(
+            'label_for'   => 'toolbar-text',
+            'id'          => 'toolbar-text',
+            'name'        => 'toolbar-text',
+            'value'       => @$options['toolbar-text'],
+            'status'      => checked( @$options['toolbar-setting'], 1, false ) ? '' : 'disabled',
             'size'        => '34',
             'type'        => 'text',
             'placeholder' => 'Enter your Toolbar Text',
-            'class'       => 'dealsbar_option',
+            'class'       => 'dealsbar-option',
             'extra'       => ''
         ));
-        add_settings_field( 'ToolbarPositionTop', 'Dealsbar Position', array( $this, 'render_settings_input'), 'shareasale_dealsbar', 'dealsbar_Toolbar', array(
-            'label_for'   => 'ToolbarPositionTop', //top is default
-            'id'          => 'ToolbarPositionTop',
-            'name'        => 'ToolbarPosition',
+        add_settings_field( 'toolbar-position-top', 'Dealsbar Position', array( $this, 'render_settings_input' ), 'shareasale_dealsbar', 'dealsbar_toolbar', array(
+            'label_for'   => 'toolbar-position-top', //top is default
+            'id'          => 'toolbar-position-top',
+            'name'        => 'toolbar-position',
             'value'       => 'top',
-            'status'      => checked( @$options['ToolbarSetting'], 1, false ) ? '' : 'disabled',
-            'size'        => '',
+            'status'      => ( checked( @$options['toolbar-setting'], 1, false ) ? '' : 'disabled ' ) . checked( @$options['toolbar-position'], 'top', true ),
+            'size'        => 1,
             'type'        => 'radio',
             'placeholder' => '',
-            'class'       => 'dealsbar_option',
+            'class'       => 'dealsbar-option',
             'extra'       => 'Top'
         ));
-        add_settings_field( 'ToolbarPositionBottom', '', array( $this, 'render_settings_input'), 'shareasale_dealsbar', 'dealsbar_Toolbar', array(
-            'id'          => 'ToolbarPositionBottom',
-            'name'        => 'ToolbarPosition',
+        add_settings_field( 'toolbar-position-bottom', '', array( $this, 'render_settings_input' ), 'shareasale_dealsbar', 'dealsbar_toolbar', array(
+            'id'          => 'toolbar-position-bottom',
+            'name'        => 'toolbar-position',
             'value'       => 'bottom',
-            'status'      => checked( @$options['ToolbarSetting'], 1, false ) ? '' : 'disabled',
-            'size'        => '',
+            'status'      => ( checked( @$options['toolbar-setting'], 1, false ) ? '' : 'disabled ' ) . checked( @$options['toolbar-position'], 'bottom', true ),
+            'size'        => 1,
             'type'        => 'radio',
             'placeholder' => '',
-            'class'       => 'dealsbar_option',
+            'class'       => 'dealsbar-option',
             'extra'       => 'Bottom'
         ));
 
-        //ToolbarSize is not actually a field that will ever be saved by the WP settings API, it's just a jQuery slider for ToolbarPixels field
-        add_settings_field( 'ToolbarSize', 'Dealsbar Height Slider', array( $this, 'render_settings_slider'), 'shareasale_dealsbar', 'dealsbar_Toolbar', array(
-            'label_for' => 'ToolbarSize'
+        //toolbar-size is not actually a field that will ever be saved by the WP settings API, it's just a jQuery slider for toolbar-pixels field
+        add_settings_field( 'toolbar-size', 'Dealsbar Height Slider', array( $this, 'render_settings_slider' ), 'shareasale_dealsbar', 'dealsbar_toolbar', array(
+            'label_for' => 'toolbar-size'
         ));
-        add_settings_field( 'ToolbarPixels', 'Dealsbar Height (pixels)', array( $this, 'render_settings_input'), 'shareasale_dealsbar', 'dealsbar_Toolbar', array(
-            'label_for'   => 'ToolbarPixels',
-            'id'          => 'ToolbarPixels',
-            'name'        => 'ToolbarPixels',
-            'value'       => @$options['ToolbarPixels'] ? @$options['ToolbarPixels'] : 15,
-            'status'      => checked( @$options['ToolbarSetting'], 1, false ) ? 'min="15" max="60"' : 'min="15" max="60" disabled',
+        add_settings_field( 'toolbar-pixels', 'Dealsbar Height (pixels)', array( $this, 'render_settings_input' ), 'shareasale_dealsbar', 'dealsbar_toolbar', array(
+            'label_for'   => 'toolbar-pixels',
+            'id'          => 'toolbar-pixels',
+            'name'        => 'toolbar-pixels',
+            'value'       => @$options['toolbar-pixels'] ? @$options['toolbar-pixels'] : 15,
+            'status'      => checked( @$options['toolbar-setting'], 1, false ) ? 'min="15" max="60"' : 'min="15" max="60" disabled',
             'size'        => 34,
             'type'        => 'number',
             'placeholder' => '',
-            'class'       => 'dealsbar_option',
+            'class'       => 'dealsbar-option',
             'extra'       => ''
         ));
-        add_settings_field( 'ToolbarBGColor', 'Dealsbar Background Color', array( $this, 'render_settings_input'), 'shareasale_dealsbar', 'dealsbar_Toolbar', array(    
-            'id'          => 'ToolbarBGColor',
-            'name'        => 'ToolbarBGColor',
-            'value'       => @$options['ToolbarBGColor'],
-            'status'      => '',
+        add_settings_field( 'toolbar-bg-color', 'Dealsbar Background Color', array( $this, 'render_settings_input' ), 'shareasale_dealsbar', 'dealsbar_toolbar', array(    
+            'id'          => 'toolbar-bg-color',
+            'name'        => 'toolbar-bg-color',
+            'value'       => @$options['toolbar-bg-color'],
+            'status'      => checked( @$options['toolbar-setting'], 1, false ) ? '' : 'disabled',
             'size'        => '',
             'type'        => 'text',
             'placeholder' => '',
             'class'       => 'my-color-field',
             'extra'       => ''
         ));
-        add_settings_field( 'ToolbarTextColor', 'Dealsbar Text Color', array( $this, 'render_settings_input'), 'shareasale_dealsbar', 'dealsbar_Toolbar', array(    
-            'id'          => 'ToolbarTextColor',
-            'name'        => 'ToolbarTextColor',
-            'value'       => @$options['ToolbarTextColor'],
-            'status'      => '',
+        add_settings_field( 'toolbar-text-color', 'Dealsbar Text Color', array( $this, 'render_settings_input' ), 'shareasale_dealsbar', 'dealsbar_toolbar', array(    
+            'id'          => 'toolbar-text-color',
+            'name'        => 'toolbar-text-color',
+            'value'       => @$options['toolbar-text-color'],
+            'status'      => checked( @$options['toolbar-setting'], 1, false ) ? '' : 'disabled',
             'size'        => '',
             'type'        => 'text',
             'placeholder' => '',
             'class'       => 'my-color-field',
             'extra'       => ''
         ));
-        add_settings_field( 'ToolbarCustomCSS', 'Dealsbar Custom CSS? <br>ex. <i>font-weight: bolder;</i>', array( $this, 'render_settings_input'), 'shareasale_dealsbar', 'dealsbar_Toolbar', array(    
-            'id'          => 'ToolbarCustomCSS',
-            'name'        => 'ToolbarCustomCSS',
-            'value'       => @$options['ToolbarCustomCSS'],
-            'status'      => '',
+        add_settings_field( 'toolbar-custom-css', 'Dealsbar Custom CSS? <br>ex. <i>font-weight: bolder;</i>', array( $this, 'render_settings_input' ), 'shareasale_dealsbar', 'dealsbar_toolbar', array(    
+            'id'          => 'toolbar-custom-css',
+            'name'        => 'toolbar-custom-css',
+            'value'       => @$options['toolbar-custom-css'],
+            'status'      => checked( @$options['toolbar-setting'], 1, false ) ? '' : 'disabled',
             'size'        => 75,
             'type'        => 'text',
             'placeholder' => 'Enter your Toolbar Custom CSS',
-            'class'       => 'dealsbar_option',
+            'class'       => 'dealsbar-option',
             'extra'       => ''
         ));
 
@@ -216,21 +216,21 @@ class ShareASale_Dealsbar_Admin {
                 $results[$obj->label][] = array( 
                                             'value'    => $obj->value,
                                             'selected' => 
-                                            	is_array( @$options['ToolbarMerchants'] ) && in_array( $obj->value, @$options['ToolbarMerchants'] ) ? 'selected' : ''
+                                            	is_array( @$options['toolbar-merchants'] ) && in_array( $obj->value, @$options['toolbar-merchants'] ) ? 'selected' : ''
                                         	);
             }
         );
 
-        add_settings_field( 'ToolbarMerchants', 'Include These Merchants Random Deals (at least one) <br> <i>ctrl+click to select multiple</i>',
+        add_settings_field( 'toolbar-merchants', 'Include These Merchants Random Deals (at least one) <br> <i>ctrl+click to select multiple</i>',
         	array( 
         		$this,
         		'render_settings_select'
-        	),  'shareasale_dealsbar', 'dealsbar_Toolbar', 
+        	),  'shareasale_dealsbar', 'dealsbar_toolbar', 
         	array(
-	            'label_for' => 'ToolbarMerchants',
-	            'id'        => 'ToolbarMerchants',
-	            'name'      => 'ToolbarMerchants',
-	            'status'    => @$options['ToolbarSetting'] ? '' : 'disabled',
+	            'label_for' => 'toolbar-merchants',
+	            'id'        => 'toolbar-merchants',
+	            'name'      => 'toolbar-merchants',
+	            'status'    => @$options['toolbar-setting'] ? '' : 'disabled',
 	            'optgroups' => $results
         ));
     }
@@ -284,7 +284,8 @@ class ShareASale_Dealsbar_Admin {
     public function render_settings_slider(){
         require_once plugin_dir_path( __FILE__ ) . 'templates/shareasale-dealsbar-settings-slider.php'; 
     }
-    
+
+    //input rendering functions meant to be as reusable as possible    
     public function render_settings_input( $attributes ) {
         $template      = file_get_contents( plugin_dir_path( __FILE__ ) . 'templates/shareasale-dealsbar-settings-input.php' );
         $template_data = array_map( 'esc_attr', $attributes );
@@ -351,5 +352,51 @@ class ShareASale_Dealsbar_Admin {
             								), $html );
         }
         return $template_fragment;
+    }
+
+    private function dealsbar_sanitize( $data ){
+        $options = get_option('dealsbar_options');  
+        //verify what the user put in for API work!     
+        $affID = $data['Affiliate ID'];
+        $APIkey = $data['API Key'];
+        $APIToken = $data['API Token'];
+        $req = new ShareASaleAPI_db();
+        //begin sanitization...
+          //are these new API credentials?
+        if ($data['Affiliate ID'] != @$options['Affiliate ID'] || $data['API Key'] != @$options['API Key'] || $data['API Token'] != @$options['API Token']){
+            //if so, make an API request to check whether they work... 
+            $record = $req->requestAPI('apitokencount', '', '', array('affID' => $affID, 'APIkey' => $APIkey, 'api-token' => $APIToken));
+            //if the API request didn't work, trigger a settings error
+            if(stripos($record, "Error")){
+                add_settings_error( 'dealsbar_API', 'API', 'Your API credentials did not work. Check your affiliate ID, key, and token.  <span style = "font-size: 10px">' . $record . '</span>'  );
+                //clear out fields to reset API creds back to null
+                $data['Affiliate ID'] = $data['API Key'] = $data['API Token'] = '';
+              //otherwise it worked!
+            }else{
+            //if API request to ShareASale successful with new creds, do immediate deals sync after settings successfully updated
+            //mainly for first-time settings entries
+                add_action('update_option_dealsbar_options','db_do_deal_update');
+            }
+        } 
+        //make sure the toolbar customization options can't have null values saved to the db. ensure at least defaults are set... 
+        if (!$data['Toolbar Text'])
+          unset($data['Toolbar Text']); //no default necessary, just unset the name
+
+        if (!$data['Toolbar Custom CSS'])
+          unset($data['Toolbar Custom CSS']); //no default custom css necessary, just unset
+
+        if (!$data['Toolbar Pixels'])
+          $data['Toolbar Pixels'] = 15;
+
+        if (!$data['Toolbar Position'])
+          $data['Toolbar Position'] = 'top';
+
+        if (!$data['Toolbar BGColor'])
+          $data['Toolbar BGColor'] = '#FFFFFF';
+
+        if (!$data['Toolbar Text Color'])
+          $data['Toolbar Text Color'] = '#000000';
+
+        return $data;
     }
 }

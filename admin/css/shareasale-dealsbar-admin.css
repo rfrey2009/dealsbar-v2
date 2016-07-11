@@ -1,9 +1,6 @@
-div#shareasale_dealsbar {
+div#shareasale-dealsbar {
     width:  100%;
 }
 img#shareasale-logo{
 	vertical-align: middle;
-}
-input.shareasale_dealsbar-input{
-	margin: 0.5em 0 0.5em 0;
 }
