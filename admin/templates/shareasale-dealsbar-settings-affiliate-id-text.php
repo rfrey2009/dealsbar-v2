@@ -1,1 +1,0 @@
-<p>Insert your ShareASale Affiliate information here. Once added, you can use the Dealsbar tool in your <a href = <?php echo admin_url( 'edit.php') ?>>post editor</a>. </p>
