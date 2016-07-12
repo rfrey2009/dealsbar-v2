@@ -1,7 +1,7 @@
 <?php
 error_reporting(E_ALL);
 class ShareASale_Dealsbar_Admin {
-     /**
+    /**
    * @var float $version Plugin version, used for cache-busting
    */
 	private $wpdb, $version;
@@ -21,9 +21,25 @@ class ShareASale_Dealsbar_Admin {
             'shareasale-dealsbar-admin-css',
             plugin_dir_url( __FILE__ ) . 'css/shareasale-dealsbar-admin.css',
             array(),
-            $this->version,
-            FALSE
+            $this->version
         );
+
+        wp_enqueue_style( 
+            'font-awesome', 
+            plugin_dir_url( __FILE__ ) . 'css/font-awesome.min.css',
+            array(),
+            '4.6.3'
+        );
+
+        //jquery ui css i.e. for tabs & slider
+        wp_enqueue_style( 
+            'dealsbar_jquery_custom_css',
+            plugin_dir_url( __FILE__ ) . 'css/jquery-ui.css',
+            array(),
+            '1.11.4'
+        );
+
+        wp_enqueue_style( 'wp-color-picker' );
  
     }
 
@@ -33,33 +49,32 @@ class ShareASale_Dealsbar_Admin {
     public function enqueue_scripts( $hook ) {
         $options = get_option( 'dealsbar_options' );
 
-        if( $hook == 'post.php' && @$options['affiliate-id'] ) {
+        if( $hook == 'toplevel_page_dealsbar' && @$options['affiliate-id'] ) {
 
             wp_register_script(
                 'shareasale-dealsbar-admin-js',
                 plugin_dir_url( __FILE__ ) . 'js/shareasale-dealsbar-admin.js',
                 array('jquery'),
-                $this->version,
-                FALSE
+                $this->version
             );
-
+            //plugin
             wp_localize_script( 'shareasale-dealsbar-admin-js', 'shareasale_dealsbar_data', $options );
             wp_enqueue_script( 'shareasale-dealsbar-admin-js' );
+            //WP
+            wp_enqueue_script( 'wp-color-picker' );
+            //jQuery
+            wp_enqueue_script( 'jquery-ui-core' );
+            wp_enqueue_script( 'jquery-ui-widget' );
+            wp_enqueue_script( 'jquery-ui-mouse' );
+            wp_enqueue_script( 'jquery-ui-position' );
+            wp_enqueue_script( 'jquery-ui-slider' );
 
-            wp_register_script(
-                'clipboard',
-                plugin_dir_url( __FILE__ ) . 'js/clipboard.min.js',
-                array(),
-                $this->version,
-                FALSE
-            );
-            wp_enqueue_script( 'clipboard' );
         }
     }
 
     public function admin_init() {
         $options = get_option( 'dealsbar_options' );
-        register_setting( 'dealsbar_options', 'dealsbar_options' /*, array( $this, 'sanitize_settings' ) */ );
+        register_setting( 'dealsbar_options', 'dealsbar_options', array( $this, 'sanitize_settings' ) );
 
         //API settings... so much boilerplate WordPress code.
         //HTML name attributes have hyphens for spaces, therefore PHP array indexes do too (instead of usual _underscore or camelCase) for HTML value attributes
@@ -82,27 +97,38 @@ class ShareASale_Dealsbar_Admin {
             'name'        => 'api-token',
             'value'       => !empty( $options['api-token'] ) ? $options['api-token'] : '',
             'status'      => '',
-            'size'        => 18,
+            'size'        => 20,
             'type'        => 'text',
             'placeholder' => 'Enter your API Token',
             'class'       => 'dealsbar-option',
             'extra'       => ''
         ));
-        add_settings_field( 'api-key', 'API Key', array( $this, 'render_settings_input' ), 'shareasale_dealsbar', 'dealsbar_api', array(
-            'label_for'   => 'api-key',
-            'id'          => 'api-key',
-            'name'        => 'api-key',
-            'value'       => !empty( $options['api-key'] ) ? $options['api-key'] : '',
+        add_settings_field( 'api-secret', 'API Secret', array( $this, 'render_settings_input' ), 'shareasale_dealsbar', 'dealsbar_api', array(
+            'label_for'   => 'api-secret',
+            'id'          => 'api-secret',
+            'name'        => 'api-secret',
+            'value'       => !empty( $options['api-secret'] ) ? $options['api-secret'] : '',
             'status'      => '',
             'size'        => 34,
             'type'        => 'text',
-            'placeholder' => 'Enter your API Key',
+            'placeholder' => 'Enter your API Secret',
             'class'       => 'dealsbar-option',
             'extra'       => ''
         ));
           
         //dealsbar settings
         add_settings_section( 'dealsbar_toolbar', 'Dealsbar', array( $this, 'render_settings_toolbar_section_text' ), 'shareasale_dealsbar' );
+        add_settings_field( 'toolbar-setting-hidden', '', array( $this, 'render_settings_input' ), 'shareasale_dealsbar', 'dealsbar_toolbar', array(
+            'id'          => 'toolbar-setting-hidden',
+            'name'        => 'toolbar-setting',
+            'value'       => 0,
+            'status'      => '',
+            'size'        => 1,
+            'type'        => 'hidden',
+            'placeholder' => '',
+            'class'       => 'dealsbar-option-hidden',
+            'extra'       => ''
+        ));
         add_settings_field( 'toolbar-setting', 'Dealsbar Enabled', array( $this, 'render_settings_input' ), 'shareasale_dealsbar', 'dealsbar_toolbar', array(
             'label_for'   => 'toolbar-setting',
             'id'          => 'toolbar-setting',
@@ -132,7 +158,8 @@ class ShareASale_Dealsbar_Admin {
             'id'          => 'toolbar-position-top',
             'name'        => 'toolbar-position',
             'value'       => 'top',
-            'status'      => disabled( @$options['toolbar-setting'], '', false ) . checked( @$options['toolbar-position'], 'top', false ),
+            'status'      => 
+                disabled( @$options['toolbar-setting'], '', false ) . checked( @$options['toolbar-position'], 'top', false ) . checked( @$options['toolbar-position'], '', false ),
             'size'        => 1,
             'type'        => 'radio',
             'placeholder' => '',
@@ -160,7 +187,7 @@ class ShareASale_Dealsbar_Admin {
             'id'          => 'toolbar-pixels',
             'name'        => 'toolbar-pixels',
             'value'       => !empty( $options['toolbar-pixels'] ) ? $options['toolbar-pixels'] : 15,
-            'status'      => disabled( @$options['toolbar-setting'], '', false ) . 'min="15" max="60"',
+            'status'      => disabled( @$options['toolbar-setting'], '', false ) . 'min=15 max=60',
             'size'        => 34,
             'type'        => 'number',
             'placeholder' => '',
@@ -202,7 +229,7 @@ class ShareASale_Dealsbar_Admin {
         ));
 
         $results = array();
-        //relies on a PHP >=5.3 lambda fn. must do this to get the correct data structure back from the db using WordPress' $wpdb abstraction
+        //relies on a PHP >=5.3 anon fn. must do this to get the correct data structure back from the db using WordPress' $wpdb abstraction
         array_walk( 
         	( $this->wpdb->get_results( '
 										SELECT DISTINCT
@@ -213,7 +240,7 @@ class ShareASale_Dealsbar_Admin {
 										OBJECT_K 
 									)
 								),
-            function( $obj ) use ( &$results, $options ){
+            function( $obj ) use ( &$results, $options ) {
                 $results[$obj->label][] = array( 
                                             'value'    => $obj->value,
                                             'selected' => 
@@ -226,7 +253,8 @@ class ShareASale_Dealsbar_Admin {
         	array( 
         		$this,
         		'render_settings_select'
-        	),  'shareasale_dealsbar', 'dealsbar_toolbar', 
+        	),  
+            'shareasale_dealsbar', 'dealsbar_toolbar', 
         	array(
 	            'label_for' => 'toolbar-merchants',
 	            'id'        => 'toolbar-merchants',
@@ -278,7 +306,7 @@ class ShareASale_Dealsbar_Admin {
         require_once plugin_dir_path( __FILE__ ) . 'templates/shareasale-dealsbar-settings-toolbar-section-text.php';
     }
 
-    public function render_settings_slider(){
+    public function render_settings_slider() {
         require_once plugin_dir_path( __FILE__ ) . 'templates/shareasale-dealsbar-settings-slider.php'; 
     }
 
@@ -287,21 +315,21 @@ class ShareASale_Dealsbar_Admin {
         $template      = file_get_contents( plugin_dir_path( __FILE__ ) . 'templates/shareasale-dealsbar-settings-input.php' );
         $template_data = array_map( 'esc_attr', $attributes );
         
-        foreach ( $template_data as $macro => $value ){
+        foreach ( $template_data as $macro => $value ) {
           $template = str_replace( "!!$macro!!", $value, $template );
         }
         echo $template; 
     }
 
-    public function render_settings_select( $attributes ){
+    public function render_settings_select( $attributes ) {
         $template      = file_get_contents( plugin_dir_path( __FILE__ ) . 'templates/shareasale-dealsbar-settings-select.php' );
-        $template_data = array_map( function( $attribute ){
+        $template_data = array_map( function( $attribute ) {
 
             if( gettype( $attribute ) == 'string' ) return esc_attr( $attribute );
             return $attribute;            
         }, $attributes );
 
-        foreach ($template_data as $macro => $value){
+        foreach ($template_data as $macro => $value) {
             if ( gettype( $value ) == 'string' )
                 $template = str_replace( "!!$macro!!", $value, $template );
         }
@@ -309,7 +337,7 @@ class ShareASale_Dealsbar_Admin {
         echo $template;
     }
 
-    private function render_settings_select_optgroup( $optgroups ){
+    private function render_settings_select_optgroup( $optgroups ) {
         if( empty( $optgroups ) ) {
         	//if no Merchants pulled in from ShareASale API yet, create a blank <optgroup><option/><optgroup/>
             $optgroups = array( 'None'  => 
@@ -335,7 +363,7 @@ class ShareASale_Dealsbar_Admin {
         return $template_fragment;
     }
 
-    private function render_settings_select_optgroup_option( $options ){
+    private function render_settings_select_optgroup_option( $options ) {
     	$template_fragment = '';
 
         foreach ( $options as $option ) {
@@ -351,28 +379,33 @@ class ShareASale_Dealsbar_Admin {
         return $template_fragment;
     }
 
-    private function sanitize_settings( $settings ){
-        $options      = get_option( 'dealsbar_options' );
-        $affiliate_id = $settings['affiliate-id'];
-        $api_key      = $settings['api-key'];
-        $api_token    = $settings['api-token'];
-        $req          = new ShareASaleAPI_db();
-        // if( array_diff_assoc($settings, $options) )
-        //are these new API credentials to check?
-        if ($settings['affiliate-id'] != @$options['affiliate-id'] || $settings['api-key'] != @$options['api-key'] || $settings['api-token'] != @$options['api-token']){
-            $record = $req->requestAPI('apitokencount', '', '', array('affiliate_id' => $affiliate_id, 'api_key' => $api_key, 'api_token' => $api_token));
-            //if the API request didn't work, trigger a settings error
-            if( stripos( $record, "Error" ) ){
-                add_settings_error( 'dealsbar_API', 'API', 'Your API credentials did not work. Check your affiliate ID, key, and token.  <span style = "font-size: 10px">' . $record . '</span>'  );
-                //clear out fields to reset API creds back to null
-                $settings['affiliate-id'] = $settings['api-key'] = $settings['api-token'] = '';
-              //otherwise it worked!
-            }else{
-            //if API request to ShareASale successful with new creds, do immediate deals sync after settings successfully updated mainly for first-time settings entries
-                add_action('update_option_dealsbar_options','db_do_deal_update');
-            }
-        }       
+    public function sanitize_settings( $settings = array() ) {
+        $options           = get_option( 'dealsbar_options' ) ?: array();
+        $diff_new_settings = array_diff_assoc( $settings, $options );
+        $diff_old_settings = array_diff_assoc( $options, $settings );
 
-        return $settings;
+        if( isset( $diff_new_settings['affiliate-id'] ) || isset( $diff_new_settings['api-token'] ) || isset( $diff_new_settings['api-secret'] ) ) {
+
+            $shareasale_api = new ShareASale_Dealsbar_API( @$settings['affiliate-id'], @$settings['api-token'], @$settings['api-secret'] );
+            $req = $shareasale_api->token_count()->exec();
+            
+            if( !$req ){
+
+                add_settings_error( 'dealsbar_API',
+                                    'API',
+                                    'Your API credentials did not work. Check your affiliate ID, key, and token.  <span style = "font-size: 10px">'
+                                    . $shareasale_api->get_error_msg() . 
+                                    '</span>'
+                                );
+
+                $settings['affiliate-id'] = $settings['api-token'] = $settings['api-secret'] = '';
+
+            }
+        }else{
+            //if API request to ShareASale successful with new creds, do immediate deals sync after settings successfully updated mainly for first-time settings entries
+            //add_action( 'update_option_dealsbar_options', 'db_do_deal_update' );
+        }
+        //array order is important to the merge to cover all option saves
+        return array_merge( $settings, $diff_old_settings, $diff_new_settings );
     }
 }

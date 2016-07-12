@@ -29,7 +29,7 @@ class ShareASale_Dealsbar {
         add_option( 'dealsbar_options', '' );
 
         require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-shareasale-dealsbar-admin.php';
- 
+        require_once plugin_dir_path( __FILE__ ) . 'class-shareasale-dealsbar-api.php';
         require_once plugin_dir_path( __FILE__ ) . 'class-shareasale-dealsbar-loader.php';
         $this->loader = new ShareASale_Dealsbar_Loader();
     }

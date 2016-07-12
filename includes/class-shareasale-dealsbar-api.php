@@ -13,10 +13,10 @@ class ShareASale_Dealsbar_API {
 	private $error_msg;
 	private $response;
 
-	public function __construct( $api_token, $api_secret, $affiliate_id ) {
+	public function __construct( $affiliate_id, $api_token, $api_secret ) {
+		$this->affiliate_id = $affiliate_id;
 		$this->api_token    = $api_token;
 		$this->api_secret   = $api_secret;
-		$this->affiliate_id = $affiliate_id;		
 		return $this;
 	}
 
@@ -25,10 +25,10 @@ class ShareASale_Dealsbar_API {
 		$hostname    = 'api.shareasale.com/';
 		$handler     = 'x.cfm';
 		$params      = array_merge( [
-									'action'       =>$this->action,
-									'affiliate_id' => $this->affiliate_id,
-									'token'        =>$this->api_token,
-									'version'      =>$this->api_version
+									'action'       => $this->action,
+									'affiliateid'  => $this->affiliate_id,
+									'token'        => $this->api_token,
+									'version'      => $this->api_version
 									],
 								$params );
 
@@ -47,6 +47,7 @@ class ShareASale_Dealsbar_API {
 		$sig      = $this->api_token . ':' . $this->timestamp . ':' . $this->action . ':' . $this->api_secret;
 		$sig_hash = hash( 'sha256', $sig );
 		$this->headers = array( "x-ShareASale-Date: {$this->timestamp}", "x-ShareASale-Authentication: {$sig_hash}" );
+		return TRUE;
 	}		
 
 	public function coupon_deals( $params = array() ){
@@ -56,7 +57,7 @@ class ShareASale_Dealsbar_API {
 	}
 
 	public function token_count(){
-		$this->action = 'api_tokencount';
+		$this->action = 'apitokencount';
 		$this->query  = $this->build_url();		
 		return $this;
 	}
@@ -85,7 +86,6 @@ class ShareASale_Dealsbar_API {
 			$this->error_msg = trim( $response );
 			return FALSE;
 		}
-		//else return json object off the response
 		$this->response = trim( $response );
 		return TRUE;
 	}
