@@ -49,7 +49,7 @@ class ShareASale_Dealsbar_Admin {
     public function enqueue_scripts( $hook ) {
         $options = get_option( 'dealsbar_options' );
 
-        if( $hook == 'toplevel_page_dealsbar' && @$options['affiliate-id'] ) {
+        if( $hook == 'toplevel_page_dealsbar' /* && @$options['affiliate-id'] */ ) {
 
             wp_register_script(
                 'shareasale-dealsbar-admin-js',
@@ -118,6 +118,7 @@ class ShareASale_Dealsbar_Admin {
           
         //dealsbar settings
         add_settings_section( 'dealsbar_toolbar', 'Dealsbar', array( $this, 'render_settings_toolbar_section_text' ), 'shareasale_dealsbar' );
+        //hidden input named same as checkbox to save unchecked 0 value case
         add_settings_field( 'toolbar-setting-hidden', '', array( $this, 'render_settings_input' ), 'shareasale_dealsbar', 'dealsbar_toolbar', array(
             'id'          => 'toolbar-setting-hidden',
             'name'        => 'toolbar-setting',
@@ -390,7 +391,6 @@ class ShareASale_Dealsbar_Admin {
             $req = $shareasale_api->token_count()->exec();
             
             if( !$req ){
-
                 add_settings_error( 'dealsbar_API',
                                     'API',
                                     'Your API credentials did not work. Check your affiliate ID, key, and token.  <span style = "font-size: 10px">'
@@ -398,9 +398,10 @@ class ShareASale_Dealsbar_Admin {
                                     '</span>'
                                 );
 
-                $settings['affiliate-id'] = $settings['api-token'] = $settings['api-secret'] = '';
+                $diff_new_settings['affiliate-id'] = $diff_new_settings['api-token'] = $diff_new_settings['api-secret'] = '';
 
             }
+
         }else{
             //if API request to ShareASale successful with new creds, do immediate deals sync after settings successfully updated mainly for first-time settings entries
             //add_action( 'update_option_dealsbar_options', 'db_do_deal_update' );
