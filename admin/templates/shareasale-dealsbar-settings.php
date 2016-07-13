@@ -1,4 +1,4 @@
-<div id = "shareasale_dealsbar">
+<div id = "shareasale-dealsbar">
 <?php
 	include_once 'options-head.php'; //to get settings errors set with add_settings_error in the validation/sanitization callback working in the custom menu page
 
@@ -16,13 +16,13 @@
   <div>    
     <h2><img src = <?php echo '"' . plugin_dir_url( __FILE__ ) . '../images/star_big2.png"' ?>>ShareASale Dealsbar Settings</h2>
     <form action = "options.php" method = "post">
-    <div id = 'dealsbar_options'>
+    <div id = 'dealsbar-options'>
     <?php
       settings_fields( 'dealsbar_options' );
       do_settings_sections( 'shareasale_dealsbar' );
     ?>     
     </div>
-    <button id = "dealsbar_options_save" name = "Submit">Save Settings</button>
+    <button id = "dealsbar-options-save" name = "Submit">Save Settings</button>
     </form>
   </div> 
 </div><!-- #shareasale_dealsbar -->

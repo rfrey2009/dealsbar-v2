@@ -147,7 +147,7 @@ class ShareASale_Dealsbar_Admin {
             'id'          => 'toolbar-text',
             'name'        => 'toolbar-text',
             'value'       => !empty( $options['toolbar-text'] ) ? $options['toolbar-text'] : '',
-            'status'      => disabled( @$options['toolbar-setting'], '', false ),
+            'status'      => disabled( @$options['toolbar-setting'], 0, false ),
             'size'        => '34',
             'type'        => 'text',
             'placeholder' => 'Enter your Toolbar Text',
@@ -160,7 +160,7 @@ class ShareASale_Dealsbar_Admin {
             'name'        => 'toolbar-position',
             'value'       => 'top',
             'status'      => 
-                disabled( @$options['toolbar-setting'], '', false ) . checked( @$options['toolbar-position'], 'top', false ) . checked( @$options['toolbar-position'], '', false ),
+                disabled( @$options['toolbar-setting'], 0, false ) . checked( @$options['toolbar-position'], 'top', false ) . checked( @$options['toolbar-position'], '', false ),
             'size'        => 1,
             'type'        => 'radio',
             'placeholder' => '',
@@ -171,7 +171,7 @@ class ShareASale_Dealsbar_Admin {
             'id'          => 'toolbar-position-bottom',
             'name'        => 'toolbar-position',
             'value'       => 'bottom',
-            'status'      => disabled( @$options['toolbar-setting'], '', false ) . checked( @$options['toolbar-position'], 'bottom', false ),
+            'status'      => disabled( @$options['toolbar-setting'], 0, false ) . checked( @$options['toolbar-position'], 'bottom', false ),
             'size'        => 1,
             'type'        => 'radio',
             'placeholder' => '',
@@ -188,7 +188,7 @@ class ShareASale_Dealsbar_Admin {
             'id'          => 'toolbar-pixels',
             'name'        => 'toolbar-pixels',
             'value'       => !empty( $options['toolbar-pixels'] ) ? $options['toolbar-pixels'] : 15,
-            'status'      => disabled( @$options['toolbar-setting'], '', false ) . 'min=15 max=60',
+            'status'      => disabled( @$options['toolbar-setting'], 0, false ) . 'min=15 max=60',
             'size'        => 34,
             'type'        => 'number',
             'placeholder' => '',
@@ -199,7 +199,7 @@ class ShareASale_Dealsbar_Admin {
             'id'          => 'toolbar-bg-color',
             'name'        => 'toolbar-bg-color',
             'value'       => !empty( $options['toolbar-bg-color'] ) ? $options['toolbar-bg-color'] : '#FFFFFF',
-            'status'      => disabled( @$options['toolbar-setting'], '', false ),
+            'status'      => disabled( @$options['toolbar-setting'], 0, false ),
             'size'        => '',
             'type'        => 'text',
             'placeholder' => '',
@@ -210,7 +210,7 @@ class ShareASale_Dealsbar_Admin {
             'id'          => 'toolbar-text-color',
             'name'        => 'toolbar-text-color',
             'value'       => !empty( $options['toolbar-text-color'] ) ? $options['toolbar-text-color'] : '#000000',
-            'status'      => disabled( @$options['toolbar-setting'], '', false ),
+            'status'      => disabled( @$options['toolbar-setting'], 0, false ),
             'size'        => '',
             'type'        => 'text',
             'placeholder' => '',
@@ -221,7 +221,7 @@ class ShareASale_Dealsbar_Admin {
             'id'          => 'toolbar-custom-css',
             'name'        => 'toolbar-custom-css',
             'value'       => !empty( $options['toolbar-custom-css'] ) ? $options['toolbar-custom-css'] : '',
-            'status'      => disabled( @$options['toolbar-setting'], '', false ),
+            'status'      => disabled( @$options['toolbar-setting'], 0, false ),
             'size'        => 75,
             'type'        => 'text',
             'placeholder' => 'Enter your Toolbar Custom CSS',
@@ -260,7 +260,7 @@ class ShareASale_Dealsbar_Admin {
 	            'label_for' => 'toolbar-merchants',
 	            'id'        => 'toolbar-merchants',
 	            'name'      => 'toolbar-merchants',
-	            'status'    => disabled( @$options['toolbar-setting'], '', false ),
+	            'status'    => disabled( @$options['toolbar-setting'], 0, false ),
 	            'optgroups' => $results
         ));
     }
@@ -280,16 +280,13 @@ class ShareASale_Dealsbar_Admin {
 
         // Add submenu page with same slug as parent to ensure no duplicates
         $sub_menu_title = 'Settings';
-        add_submenu_page( $menu_slug, $page_title, $sub_menu_title, $capability, $menu_slug, $function );
+        add_submenu_page( $menu_slug, $page_title, $sub_menu_title, $capability, $menu_slug, $function ); 
+    }
 
-        /* Now add the submenu page for Help
-        $submenu_page_title = 'ShareASale Dealsbar Help & FAQ';
-        $submenu_title = 'Help';
-        $submenu_slug = 'dealsbar-help';
-        $submenu_function = 'dealsbar_help_page';
-        add_submenu_page($menu_slug, $submenu_page_title, $submenu_title, $capability, $submenu_slug, $submenu_function);
-        */
-     
+    public function admin_footer() {
+
+
+        
     }
 
     /**
@@ -374,20 +371,19 @@ class ShareASale_Dealsbar_Admin {
             									'!!selected!!'
             						 		), array( 
             									esc_attr( $option['value'] ),
-            									esc_attr( $option['selected'] )
+            									esc_attr( $option['selected'] ) 
             								), $html );
         }
         return $template_fragment;
     }
 
-    public function sanitize_settings( $settings = array() ) {
-        $options           = get_option( 'dealsbar_options' ) ?: array();
-        $diff_new_settings = array_diff_assoc( $settings, $options );
-        $diff_old_settings = array_diff_assoc( $options, $settings );
+    public function sanitize_settings( $new_settings = array() ) {
+        $old_settings           = get_option( 'dealsbar_options' ) ?: array();
+        $diff_new_settings = array_diff_assoc( $new_settings, $old_settings );
 
         if( isset( $diff_new_settings['affiliate-id'] ) || isset( $diff_new_settings['api-token'] ) || isset( $diff_new_settings['api-secret'] ) ) {
 
-            $shareasale_api = new ShareASale_Dealsbar_API( @$settings['affiliate-id'], @$settings['api-token'], @$settings['api-secret'] );
+            $shareasale_api = new ShareASale_Dealsbar_API( $new_settings['affiliate-id'], $new_settings['api-token'], $new_settings['api-secret'] );
             $req = $shareasale_api->token_count()->exec();
             
             if( !$req ){
@@ -398,15 +394,14 @@ class ShareASale_Dealsbar_Admin {
                                     '</span>'
                                 );
 
-                $diff_new_settings['affiliate-id'] = $diff_new_settings['api-token'] = $diff_new_settings['api-secret'] = '';
-
+                $new_settings['affiliate-id'] = $new_settings['api-token'] = $new_settings['api-secret'] = '';
             }
 
         }else{
             //if API request to ShareASale successful with new creds, do immediate deals sync after settings successfully updated mainly for first-time settings entries
             //add_action( 'update_option_dealsbar_options', 'db_do_deal_update' );
         }
-        //array order is important to the merge to cover all option saves
-        return array_merge( $settings, $diff_old_settings, $diff_new_settings );
+        //array order is important to the merge
+        return array_merge( $old_settings, $new_settings );
     }
 }

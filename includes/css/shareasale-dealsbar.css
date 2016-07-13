@@ -1,0 +1,8 @@
+div#dealsbar-deals-toolbar{
+	display: table;
+    left: 0;
+    text-align: center; 
+    z-index: 999999;
+    width: 100%;
+    position: fixed;
+}

@@ -1,5 +1,5 @@
 jQuery(document).ready(function() {
-  
+  jQuery('tr.dealsbar-option-hidden').css('display','none');
   //setup toolbar slider for sizing customization
   jQuery("#slider").slider({
     slide: function( event, ui ) {
@@ -15,7 +15,7 @@ jQuery(document).ready(function() {
     if(!this.checked){
       jQuery('#toolbar-text').prop('disabled', true);
       jQuery("#slider").slider( "option", "disabled", true );
-      jQuery('input[name="dealsbar_options[toolbar-position]"]').prop('disabled', true);
+      jQuery('input[name="dealsbar-options[toolbar-position]"]').prop('disabled', true);
       jQuery('#toolbar-pixels').prop('disabled', true);
       jQuery('td > .wp-picker-container').hide();
       jQuery('#toolbar-custom-css').prop('disabled', true);
@@ -23,7 +23,7 @@ jQuery(document).ready(function() {
     }else if(this.checked){
       jQuery('#toolbar-text').prop('disabled', false);
       jQuery("#slider").slider( "option", "disabled", false );
-      jQuery('input[name="dealsbar_options[toolbar-position]"]').prop('disabled', false);
+      jQuery('input[name="dealsbar-options[toolbar-position]"]').prop('disabled', false);
       jQuery('#toolbar-pixels').prop('disabled', false);
       //jQuery('#toolbar-bg-color').wpColorPicker( "option", "disabled", false ); --also won't work
       jQuery('td > .wp-picker-container').show();

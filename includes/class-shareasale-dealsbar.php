@@ -49,7 +49,7 @@ class ShareASale_Dealsbar {
     }
 
     /**
-    * Wrapper for the loader object to execute now that dependencies and hooks were setup in the constructor
+    * Wrapper for the loader object to execute now that dependencies and hooks were setup in the constructor 
     */
     public function run() {
         $this->loader->run();
