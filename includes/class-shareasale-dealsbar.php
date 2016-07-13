@@ -9,8 +9,7 @@ class ShareASale_Dealsbar {
    */
 	protected $loader, $plugin_slug, $version;
  
-    public function __construct() {
- 
+    public function __construct() { 
         $this->plugin_slug = 'shareasale-dealsbar-slug';
         $this->version     = '1.2';
  
@@ -31,21 +30,27 @@ class ShareASale_Dealsbar {
         require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-shareasale-dealsbar-admin.php';
         require_once plugin_dir_path( __FILE__ ) . 'class-shareasale-dealsbar-api.php';
         require_once plugin_dir_path( __FILE__ ) . 'class-shareasale-dealsbar-loader.php';
+
+
+        require_once plugin_dir_path( __FILE__ ) . 'class-shareasale-dealsbar-toolbar.php';
         $this->loader = new ShareASale_Dealsbar_Loader();
     }
 
     /**
     * Setup the actions/methods to run on the ShareASale_Dealsbar_Admin object when certain WordPress hooks happen
-    * No filters used yet in v0.1.0
     */
     private function define_admin_hooks() {
- 
         $admin = new ShareASale_Dealsbar_Admin( $this->get_version() );
+        //actions
         $this->loader->add_action( 'admin_enqueue_scripts', $admin, 'enqueue_styles' );
         $this->loader->add_action( 'admin_enqueue_scripts', $admin, 'enqueue_scripts' );
         $this->loader->add_action( 'admin_init',            $admin, 'admin_init' );
         $this->loader->add_action( 'admin_menu',            $admin, 'admin_menu' );
- 
+
+        $tb = new ShareASale_Dealsbar_Toolbar( $this->get_version() );    
+        $this->loader->add_action( 'admin_footer',          $tb, 'render_toolbar' );
+        //filters
+        $this->loader->add_filter( 'plugin_action_links_' . plugin_basename(__FILE__),   $admin, 'render_settings_shortcut' ); 
     }
 
     /**

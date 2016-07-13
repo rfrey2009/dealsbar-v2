@@ -6,3 +6,33 @@ div#dealsbar-deals-toolbar{
     width: 100%;
     position: fixed;
 }
+span#dealsbar-toolbar-ad{
+	float: left;
+}
+span#dealsbar-deal{
+	display: table-cell;
+	vertical-align: middle;
+	line-height: 1.25;
+}
+a#dealsbar-deal-text{
+	color: inherit !important;
+	text-decoration: underline !important;
+}
+div#dealsbar-toolbar-navi{
+	float:right;
+	margin-right: 5px;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	white-space: nowrap;
+	overflow: hidden;
+}
+i#dealsbar-toolbar-left{
+	cursor: pointer;	
+}
+i#dealsbar-toolbar-right{
+	cursor: pointer;
+}
+i#dealsbar-toolbar-close{
+	cursor: pointer;	
+}

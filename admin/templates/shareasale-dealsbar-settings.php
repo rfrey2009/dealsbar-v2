@@ -11,10 +11,9 @@
       echo '<b>cURL is not enabled on your server. Please contact your host to have cURL enabled to use this plugin.</b>';
       return;
   }
-
 ?>
   <div>    
-    <h2><img src = <?php echo '"' . plugin_dir_url( __FILE__ ) . '../images/star_big2.png"' ?>>ShareASale Dealsbar Settings</h2>
+    <h2><img id = "logo" src = <?php echo '"' . plugin_dir_url( __FILE__ ) . '../images/star_big2.png"' ?>>ShareASale Dealsbar Settings</h2>
     <form action = "options.php" method = "post">
     <div id = 'dealsbar-options'>
     <?php

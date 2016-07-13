@@ -1,8 +1,8 @@
 <?php
-error_reporting(E_ALL);
 class ShareASale_Dealsbar_Admin {
     /**
    * @var float $version Plugin version, used for cache-busting
+   * @var Wpdb $wpdb WordPress global database connection singleton
    */
 	private $wpdb, $version;
  
@@ -377,8 +377,14 @@ class ShareASale_Dealsbar_Admin {
         return $template_fragment;
     }
 
+    public function render_settings_shortcut( $links ) {
+        $settings_link = '<a href="' . get_bloginfo( 'wpurl' ) . '/wp-admin/admin.php?page=dealsbar">Settings</a>';
+        array_unshift( $links, $settings_link );        
+        return $links;        
+    }
+
     public function sanitize_settings( $new_settings = array() ) {
-        $old_settings           = get_option( 'dealsbar_options' ) ?: array();
+        $old_settings      = get_option( 'dealsbar_options' ) ?: array();
         $diff_new_settings = array_diff_assoc( $new_settings, $old_settings );
 
         if( isset( $diff_new_settings['affiliate-id'] ) || isset( $diff_new_settings['api-token'] ) || isset( $diff_new_settings['api-secret'] ) ) {
@@ -403,5 +409,5 @@ class ShareASale_Dealsbar_Admin {
         }
         //array order is important to the merge
         return array_merge( $old_settings, $new_settings );
-    }
+    }    
 }
