@@ -27,66 +27,82 @@ class ShareASale_Dealsbar_Toolbar {
     }
 
     private function define_toolbar_hooks() {
+        //admin
         $this->loader->add_action( 'admin_enqueue_scripts', $this, 'enqueue_styles' );
-        $this->loader->add_action( 'admin_enqueue_scripts', $this, 'enqueue_scripts' ); 
+        $this->loader->add_action( 'admin_enqueue_scripts', $this, 'enqueue_scripts' );
+        $this->loader->add_action( 'admin_enqueue_scripts', $this, 'render_custom_css' );
+        //frontend
         $this->loader->add_action( 'wp_enqueue_scripts',    $this, 'enqueue_styles' );
         $this->loader->add_action( 'wp_enqueue_scripts',    $this, 'enqueue_scripts' );
+        $this->loader->add_action( 'wp_enqueue_scripts',    $this, 'render_custom_css' );
     }
 
-    private function get_deals( $merchants ){
+    private function get_deals( $merchants ) {
         return;
     }
 
+    public function render_custom_css(){
+        $custom_inline_styles = 
+            "div#dealsbar-deals-toolbar{
+                background-color: {$this->settings['toolbar-bg-color']};
+                color: {$this->settings['toolbar-text-color']};
+                height: {$this->settings['toolbar-pixels']}px;      
+                font-size: " . ( wp_is_mobile() ? '2vmax;' : (int) $this->settings['toolbar-pixels'] / 2 . 'px;' ) . "
+                {$this->settings['toolbar-position']}: 0;
+                " . wp_strip_all_tags( $this->settings['toolbar-custom-css'] ) . "
+            }";
+        $custom_inline_styles .= 
+            "#dealsbar-toolbar-ad{
+                display: " . ( !is_admin() ? 'block' : 'none' ) . "
+            }";
+        $custom_inline_styles .= 
+            "#dealsbar-toolbar-warning{
+                display: " . ( is_admin() ? 'block' : 'none' ) . "
+            }";
+
+        wp_add_inline_style( 'dealsbar-standard-styles', $custom_inline_styles );
+    }
+
     public function render_toolbar() {
-        if( $this->settings['toolbar-setting'] != 1 )
+        if ( !$this->settings['toolbar-setting'] )
             return;
-        
-    	$template      = file_get_contents( plugin_dir_path( __FILE__ ) . 'templates/shareasale-dealsbar-toolbar.php' );
-        $template_data = $this->settings;
-        $template_data['plugin-dir-url'] = plugin_dir_url( __FILE__ );
-    	$template_data['font-size']      = wp_is_mobile() ? '2vmax' : (int)$template_data['toolbar-pixels'] / 2 . 'px';
-        //$template_data['toolbar-custom-css'] = htmlspecialchars( @$template_data['toolbar-custom-css'], ENT_QUOTES, 'UTF-8' );
-        //$template_data['display']            = array( 'front' => !is_admin(), 'admin' => is_admin() );
-        
-        foreach ( $template_data as $macro => $value ) {
-        	if( gettype( $value ) == 'string' )
-        	   $template = str_replace( "!!$macro!!", $value, $template );
-        }
+
+    	$template = file_get_contents( plugin_dir_path( __FILE__ ) . 'templates/shareasale-dealsbar-toolbar.php' );
         echo $template;
     }
 
     public function enqueue_styles( $hook ) {
-        if( $this->settings['toolbar-setting'] == 1 ){
-            wp_register_style( 
+        if ( !$this->settings['toolbar-setting'] || ( is_admin() && $hook != 'toplevel_page_dealsbar' ) )
+            return;
+
+            wp_enqueue_style( 
                 'font-awesome', 
                 plugin_dir_url( __FILE__ ) . 'css/font-awesome.min.css',
                 array(),
                 '4.6.3'
             );
 
-            wp_register_style( 
-                'dealsbar_styles', 
+            wp_enqueue_style( 
+                'dealsbar-standard-styles', 
                 plugin_dir_url( __FILE__ ) . 'css/shareasale-dealsbar.css',
                 array(),
                 $this->version
             );
-            wp_enqueue_style( 'font-awesome' );
-            wp_enqueue_style( 'dealsbar_styles' );
-        }
     }
 
     public function enqueue_scripts( $hook ) {
-        if( $this->settings['toolbar-setting'] == 1 ){
-            wp_register_script(
-                    'dealsbar_deals_toolbar',
-                    plugin_dir_url( __FILE__ ) . 'js/shareasale-dealsbar-toolbar.js',
-                    array('jquery'),
-                    $this->version
+        if ( !$this->settings['toolbar-setting'] || ( is_admin() && $hook != 'toplevel_page_dealsbar' ) )
+            return;
+
+            wp_enqueue_script(
+                'dealsbar-deals-toolbar',
+                plugin_dir_url( __FILE__ ) . 'js/shareasale-dealsbar-toolbar.js',
+                array('jquery'),
+                $this->version
             );
-            wp_enqueue_script( 'dealsbar_deals_toolbar' );
 
             wp_localize_script(
-                'dealsbar_deals_toolbar',
+                'dealsbar-deals-toolbar',
                 'dealsbarToolbarSettings',
                 array(
                     'start_index' => '', //$random_deal_index, 
@@ -94,6 +110,5 @@ class ShareASale_Dealsbar_Toolbar {
                     'is_backend' => '' //$is_backend
                 )
             );
-        }
     }
 }    

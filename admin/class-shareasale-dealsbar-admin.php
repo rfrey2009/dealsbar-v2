@@ -21,7 +21,7 @@ class ShareASale_Dealsbar_Admin {
     */ 
     public function enqueue_styles( $hook ) { 
         if( $hook == 'toplevel_page_dealsbar' ) {
-            wp_register_style(
+            wp_enqueue_style(
                 'shareasale-dealsbar-admin-css',
                 plugin_dir_url( __FILE__ ) . 'css/shareasale-dealsbar-admin.css',
                 array(),
@@ -29,14 +29,13 @@ class ShareASale_Dealsbar_Admin {
             );        
 
             //jquery ui css i.e. for tabs & slider
-            wp_register_style( 
-                'dealsbar_jquery_custom_css',
+            wp_enqueue_style( 
+                'dealsbar-jquery-custom-css',
                 plugin_dir_url( __FILE__ ) . 'css/jquery-ui.css',
                 array(),
                 '1.11.4'
             );
-            wp_enqueue_style( 'shareasale-dealsbar-admin-css' );
-            wp_enqueue_style( 'dealsbar_jquery_custom_css' );
+
             wp_enqueue_style( 'wp-color-picker' );
         }
     }
@@ -48,7 +47,7 @@ class ShareASale_Dealsbar_Admin {
         //$options = get_option( 'dealsbar_options' );
         if( $hook == 'toplevel_page_dealsbar' /* && @$options['affiliate-id'] */ ) {
 
-            wp_register_script(
+            wp_enqueue_script(
                 'shareasale-dealsbar-admin-js',
                 plugin_dir_url( __FILE__ ) . 'js/shareasale-dealsbar-admin.js',
                 array('jquery'),
@@ -56,7 +55,6 @@ class ShareASale_Dealsbar_Admin {
             );
             //plugin
             //wp_localize_script( 'shareasale-dealsbar-admin-js', 'shareasale_dealsbar_data', $options );
-            wp_enqueue_script( 'shareasale-dealsbar-admin-js' );
             //WP
             wp_enqueue_script( 'wp-color-picker' );
             //jQuery
@@ -214,7 +212,7 @@ class ShareASale_Dealsbar_Admin {
             'class'       => 'my-color-field',
             'extra'       => ''
         ));
-        add_settings_field( 'toolbar-custom-css', 'Dealsbar Custom CSS? <br>ex. <i>font-weight: bolder;</i>', array( $this, 'render_settings_input' ), 'shareasale_dealsbar', 'dealsbar_toolbar', array(    
+        add_settings_field( 'toolbar-custom-css', 'Dealsbar Custom CSS <br>ex. <i>font-weight: bolder;</i>', array( $this, 'render_settings_input' ), 'shareasale_dealsbar', 'dealsbar_toolbar', array(    
             'id'          => 'toolbar-custom-css',
             'name'        => 'toolbar-custom-css',
             'value'       => !empty( $options['toolbar-custom-css'] ) ? $options['toolbar-custom-css'] : '',
@@ -260,6 +258,17 @@ class ShareASale_Dealsbar_Admin {
 	            'status'    => disabled( @$options['toolbar-setting'], 0, false ),
 	            'optgroups' => $results
         ));
+        add_settings_field( 'toolbar-afftrack', 'Affiliate-Defined Tracking', array( $this, 'render_settings_input' ), 'shareasale_dealsbar', 'dealsbar_toolbar', array(    
+            'id'          => 'toolbar-afftrack',
+            'name'        => 'toolbar-afftrack',
+            'value'       => !empty( $options['toolbar-afftrack'] ) ? $options['toolbar-afftrack'] : '',
+            'status'      => disabled( @$options['toolbar-setting'], 0, false ),
+            'size'        => 63,
+            'type'        => 'text',
+            'placeholder' => 'Enter your any affiliate-defined/subid tracking for your dealsbar links',
+            'class'       => 'dealsbar-option',
+            'extra'       => ''
+        ));
     }
 
     /**
@@ -278,12 +287,6 @@ class ShareASale_Dealsbar_Admin {
         // Add submenu page with same slug as parent to ensure no duplicates
         $sub_menu_title = 'Settings';
         add_submenu_page( $menu_slug, $page_title, $sub_menu_title, $capability, $menu_slug, $function ); 
-    }
-
-    public function admin_footer() {
-
-
-        
     }
 
     //render static templates for settings page
