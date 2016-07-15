@@ -1,54 +1,51 @@
 <?php
 class ShareASale_Dealsbar_Admin {
     /**
-   * @var float $version Plugin version, used for cache-busting
-   * @var Wpdb $wpdb WordPress global database connection singleton
+    * @var Wpdb $wpdb WordPress global database connection singleton
+    * @var float $version Plugin version, used for cache-busting
    */
 	private $wpdb, $version;
  
-    public function __construct( $version ) {
+    public function __construct( $version ) {        
+        $this->version = $version;
+        $this->load_dependencies();
+    }
+    private function load_dependencies() {
         global $wpdb;
 
-        $this->wpdb    = &$wpdb;
-        $this->version = $version;
+        $this->wpdb = &$wpdb;
     }
 
     /**
     * Method to wrap the WordPress wp_enqueue_style() function
     */ 
-    public function enqueue_styles() { 
-        wp_enqueue_style(
-            'shareasale-dealsbar-admin-css',
-            plugin_dir_url( __FILE__ ) . 'css/shareasale-dealsbar-admin.css',
-            array(),
-            $this->version
-        );
+    public function enqueue_styles( $hook ) { 
+        if( $hook == 'toplevel_page_dealsbar' ) {
+            wp_register_style(
+                'shareasale-dealsbar-admin-css',
+                plugin_dir_url( __FILE__ ) . 'css/shareasale-dealsbar-admin.css',
+                array(),
+                $this->version
+            );        
 
-        wp_enqueue_style( 
-            'font-awesome', 
-            plugin_dir_url( __FILE__ ) . 'css/font-awesome.min.css',
-            array(),
-            '4.6.3'
-        );
-
-        //jquery ui css i.e. for tabs & slider
-        wp_enqueue_style( 
-            'dealsbar_jquery_custom_css',
-            plugin_dir_url( __FILE__ ) . 'css/jquery-ui.css',
-            array(),
-            '1.11.4'
-        );
-
-        wp_enqueue_style( 'wp-color-picker' );
- 
+            //jquery ui css i.e. for tabs & slider
+            wp_register_style( 
+                'dealsbar_jquery_custom_css',
+                plugin_dir_url( __FILE__ ) . 'css/jquery-ui.css',
+                array(),
+                '1.11.4'
+            );
+            wp_enqueue_style( 'shareasale-dealsbar-admin-css' );
+            wp_enqueue_style( 'dealsbar_jquery_custom_css' );
+            wp_enqueue_style( 'wp-color-picker' );
+        }
     }
 
     /**
     * Method to wrap the WordPress wp_enqueue_script() function
     */
     public function enqueue_scripts( $hook ) {
-        $options = get_option( 'dealsbar_options' );
-
+        //$options = get_option( 'dealsbar_options' );
         if( $hook == 'toplevel_page_dealsbar' /* && @$options['affiliate-id'] */ ) {
 
             wp_register_script(
@@ -58,7 +55,7 @@ class ShareASale_Dealsbar_Admin {
                 $this->version
             );
             //plugin
-            wp_localize_script( 'shareasale-dealsbar-admin-js', 'shareasale_dealsbar_data', $options );
+            //wp_localize_script( 'shareasale-dealsbar-admin-js', 'shareasale_dealsbar_data', $options );
             wp_enqueue_script( 'shareasale-dealsbar-admin-js' );
             //WP
             wp_enqueue_script( 'wp-color-picker' );
@@ -224,7 +221,7 @@ class ShareASale_Dealsbar_Admin {
             'status'      => disabled( @$options['toolbar-setting'], 0, false ),
             'size'        => 75,
             'type'        => 'text',
-            'placeholder' => 'Enter your Toolbar Custom CSS',
+            'placeholder' => 'Enter your Toolbar Custom CSS i.e. font-weight: bolder; text-transform: uppercase;',
             'class'       => 'dealsbar-option',
             'extra'       => ''
         ));
@@ -289,9 +286,7 @@ class ShareASale_Dealsbar_Admin {
         
     }
 
-    /**
-    * Method that displays the markup for the settings page, to be called in the WordPress add_menu_page() function
-    */
+    //render static templates for settings page
     public function render_settings_page() {
         require_once plugin_dir_path( __FILE__ ) . 'templates/shareasale-dealsbar-settings.php';
     }
@@ -308,7 +303,7 @@ class ShareASale_Dealsbar_Admin {
         require_once plugin_dir_path( __FILE__ ) . 'templates/shareasale-dealsbar-settings-slider.php'; 
     }
 
-    //input rendering functions meant to be as reusable as possible    
+    //render dynamic templates for settings page. methods meant to be as reusable as possible for future settings
     public function render_settings_input( $attributes ) {
         $template      = file_get_contents( plugin_dir_path( __FILE__ ) . 'templates/shareasale-dealsbar-settings-input.php' );
         $template_data = array_map( 'esc_attr', $attributes );
@@ -377,6 +372,7 @@ class ShareASale_Dealsbar_Admin {
         return $template_fragment;
     }
 
+    //add shortcut to settings page from the plugin admin entry for dealsbar
     public function render_settings_shortcut( $links ) {
         $settings_link = '<a href="' . get_bloginfo( 'wpurl' ) . '/wp-admin/admin.php?page=dealsbar">Settings</a>';
         array_unshift( $links, $settings_link );        
@@ -388,7 +384,7 @@ class ShareASale_Dealsbar_Admin {
         $diff_new_settings = array_diff_assoc( $new_settings, $old_settings );
 
         if( isset( $diff_new_settings['affiliate-id'] ) || isset( $diff_new_settings['api-token'] ) || isset( $diff_new_settings['api-secret'] ) ) {
-
+            //can't easily inject ShareASale_Dealsbar_API $shareasale_api as a ShareASale_Dealsbar_Admin dependency since it relies on values in the $new_settings
             $shareasale_api = new ShareASale_Dealsbar_API( $new_settings['affiliate-id'], $new_settings['api-token'], $new_settings['api-secret'] );
             $req = $shareasale_api->token_count()->exec();
             

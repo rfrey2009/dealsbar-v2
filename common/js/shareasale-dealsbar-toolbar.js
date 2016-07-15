@@ -1,6 +1,6 @@
 jQuery(document).ready(function() {
 
-	if(dealsbar-toolbar-settings.is-backend){ //check whether we're on the settings page or live blogger's front-end
+	if(dealsbarToolbarSettings.is_backend){ //check whether we're on the settings page or live blogger's frontend
 		jQuery("#slider").on( "slide slidechange", function( event, ui ) {
 
 			jQuery("#dealsbar-deals-toolbar").css('height',ui.value);
