@@ -20,7 +20,7 @@ class ShareASale_Dealsbar_API {
 		return $this;
 	}
 
-	private function build_url( $params = array() ){
+	private function build_url( $params = array() ) {
 		$protocol    = 'https://';
 		$hostname    = 'api.shareasale.com/';
 		$handler     = 'x.cfm';
@@ -28,85 +28,86 @@ class ShareASale_Dealsbar_API {
 									'action'       => $this->action,
 									'affiliateid'  => $this->affiliate_id,
 									'token'        => $this->api_token,
-									'version'      => $this->api_version
+									'version'      => $this->api_version,
 									],
-								$params );
+		$params );
 
 		$query_string = '?' . http_build_query( $params );
-		$url = $protocol . $hostname . $handler . $query_string;		
+		$url = $protocol . $hostname . $handler . $query_string;
 		return $url;
 	}
 
-	private function authenticate(){
+	private function authenticate() {
 		//can't authenticate without an action verb set already...
-		if( !$this->action ) 
-			return FALSE;
+		if ( ! $this->action ) {
+			return false;
+		}
 
 		$this->timestamp  = gmdate( DATE_RFC1123 );
 		//build auth headers
 		$sig      = $this->api_token . ':' . $this->timestamp . ':' . $this->action . ':' . $this->api_secret;
 		$sig_hash = hash( 'sha256', $sig );
 		$this->headers = array( "x-ShareASale-Date: {$this->timestamp}", "x-ShareASale-Authentication: {$sig_hash}" );
-		return TRUE;
-	}		
+		return true;
+	}
 
-	public function coupon_deals( $params = array() ){
+	public function coupon_deals( $params = array() ) {
 		$this->action = 'couponDeals';
-		$this->query  = $this->build_url( $params );		
+		$this->query  = $this->build_url( $params );
 		return $this;
 	}
 
-	public function token_count(){
+	public function token_count() {
 		$this->action = 'apitokencount';
-		$this->query  = $this->build_url();		
+		$this->query  = $this->build_url();
 		return $this;
 	}
 
-	public function exec(){
+	public function exec() {
 		//build authentication headers before making API request
-		if( !$this->authenticate() ){
+		if ( ! $this->authenticate() ) {
 			$this->error_msg = 'Could not authenticate. No API action value.';
-			return FALSE;
+			return false;
 		}
 
 		$ch = curl_init();
 		curl_setopt( $ch, CURLOPT_URL, $this->query );
 		curl_setopt( $ch, CURLOPT_HTTPHEADER, $this->headers );
-		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, TRUE );
+		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
 		curl_setopt( $ch, CURLOPT_HEADER, 0 );
-		curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, FALSE ); //set to TRUE in production
+		curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false ); //set to true in production
 		//make the API request
 		$response = curl_exec( $ch );
-		curl_close( $ch ); 
+		curl_close( $ch );
 		//set last_query property and clear out current query property
 		$this->last_query = $this->query;
 		$this->query      = '';
-		if ( stripos( $response, "Error" ) ) {
-			// error occurred... store it and return FALSE
+		if ( stripos( $response, 'Error' ) ) {
+			// error occurred... store it and return false
 			$this->error_msg = trim( $response );
-			return FALSE;
+			return false;
 		}
 		$this->response = trim( $response );
-		return TRUE;
+		return true;
 	}
 
 	//getters
-	public function get_affiliate_id(){
+	public function get_affiliate_id() {
 		return $this->affiliate_id;
 	}
 
-	public function get_last_query(){
+	public function get_last_query() {
 		return $this->last_query;
 	}
 
-	public function get_response(){
+	public function get_response() {
 		return $this->response;
 	}
 
-	public function get_error_msg(){
+	public function get_error_msg() {
 		return $this->error_msg;
 	}
 
 	//setters
 }
-?>
+
