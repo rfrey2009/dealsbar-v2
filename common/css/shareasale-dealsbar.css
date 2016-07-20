@@ -1,37 +1,37 @@
-div#dealsbar-deals-toolbar{
+#dealsbar-deals-toolbar{
 	display: table;
-    text-align: center; 
-    z-index: 999999;
-    width: 100%;
     position: fixed;
+    text-align: center;
+    width: 100%;
+    z-index: 999999;
 }
-span#dealsbar-toolbar-ad{
+#dealsbar-toolbar-ad{
 	float: left;
 }
-span#dealsbar-deal{
+#dealsbar-deal{
 	display: table-cell;
-	vertical-align: middle;
 	line-height: 1.25;
+	vertical-align: middle;
 }
-a#dealsbar-deal-text{
+#dealsbar-deal-text{
 	color: inherit !important;
 	text-decoration: underline !important;
 }
-div#dealsbar-toolbar-navi{
+#dealsbar-toolbar-navi{
 	float:right;
 	margin-right: 5px;
-	-webkit-user-select: none;
+	overflow: hidden;
 	-moz-user-select: none;
 	-ms-user-select: none;
+	-webkit-user-select: none;
 	white-space: nowrap;
-	overflow: hidden;
 }
-i#dealsbar-toolbar-left{
+#dealsbar-toolbar-left{
 	cursor: pointer;	
 }
-i#dealsbar-toolbar-right{
+#dealsbar-toolbar-right{
 	cursor: pointer;
 }
-i#dealsbar-toolbar-close{
+#dealsbar-toolbar-close{
 	cursor: pointer;	
 }

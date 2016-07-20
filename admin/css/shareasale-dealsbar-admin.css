@@ -1,23 +1,23 @@
-div#shareasale-dealsbar {
+#shareasale-dealsbar {
     width:  100%;
 }
-img#logo{
+#logo{
     vertical-align: middle;
 }
-img.dealsbar-example-img {
+.dealsbar-example-img {
+    border: 1px solid #C9C7C7;
     float: left;
-    border: 1px solid #C9C7C7
 }
-span#dealsbar-toolbar-warning{
-    color: #FFF;
-    font-size: 10px;
-    position: absolute;
-    top: 25%;
-    margin: 0px 6px 0px 6px;
-    padding: 0px 6px 0px 6px;
+#dealsbar-toolbar-warning{
     background-color: #F00;
     border: 1px solid #F00;
+    color: #FFF;
+    font-size: 10px;
+    margin: 0 6px 0 6px;
+    padding: 0 6px 0 6px;
+    position: absolute;
+    top: 25%;
 }
-select#toolbar-merchants{
+#toolbar-merchants{
     min-height: 150px;
 }

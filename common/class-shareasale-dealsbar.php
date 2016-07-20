@@ -60,7 +60,7 @@ class ShareASale_Dealsbar {
 		$this->loader->add_action( 'admin_menu',            $admin, 'admin_menu' );
 		$this->loader->add_action( 'admin_footer-toplevel_page_dealsbar', $this->toolbar, 'render_toolbar' );
 		//admin filters
-		$this->loader->add_filter( 'plugin_action_links_' . dealsbar_plugin_filename, $admin, 'render_settings_shortcut' );
+		$this->loader->add_filter( 'plugin_action_links_' . DEALSBAR_PLUGIN_FILENAME, $admin, 'render_settings_shortcut' );
 	}
 
 	private function define_installer_hooks() {

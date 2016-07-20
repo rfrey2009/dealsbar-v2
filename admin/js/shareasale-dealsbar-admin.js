@@ -51,7 +51,7 @@ jQuery(document).ready(function() {
   });
   //make it so that if you click an optgroup header, it selects ALL children (merchant stores) and stops it from snapping around the scroll
   jQuery("#toolbar-merchants").click(function(e) {
-  if(e.target.tagName = "OPTGROUP"){
+  if(e.target.tagName == "OPTGROUP"){
     var node = e.target.firstChild;
     var st = this.scrollTop;
     do{
