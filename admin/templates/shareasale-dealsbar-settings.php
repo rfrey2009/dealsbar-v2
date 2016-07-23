@@ -12,7 +12,7 @@ if ( ! function_exists( 'curl_version' ) ) {
 }
 ?>
 <div>    
-	<h2><img id = "logo" src = <?php echo '"' . plugin_dir_url( __FILE__ ) . '../images/star_big2.png"' ?>>ShareASale Dealsbar Settings</h2>
+	<h2><img id = "logo" src = <?php echo '"' . plugin_dir_url( __FILE__ ) . '../images/star_big2.png"' ?>> ShareASale Dealsbar Settings</h2>
 	<form action = "options.php" method = "post">
 	<div id = 'dealsbar-options'>
 	<?php

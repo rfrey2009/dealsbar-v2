@@ -467,13 +467,15 @@ class ShareASale_Dealsbar_Admin {
 					. $shareasale_api->get_error_msg() .
 					'</span>'
 				);
+				//if API credentials failed, sanitize those options prior to saving
 				$new_settings['affiliate-id'] = $new_settings['api-token'] = $new_settings['api-secret'] = '';
 			}
 		}
 		//array order is important to the merge
 		return array_merge( $old_settings, $new_settings );
 	}
-
+	//hooked to run immediately *after* plugin options are saved to db
+	//so ShareASale_Dealsbar_Updater() hooked to dealsbardealsupdate scheduled action can also check for new credentials and possibly run a fresh sync
 	public function update_option_dealsbar_options( $old_settings, $new_settings ) {
 		$diff_new_settings = array_diff_assoc( $new_settings, (array) $old_settings );
 		//if first time or different successful API credentials, immediately do a deal sync
