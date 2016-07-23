@@ -455,9 +455,9 @@ class ShareASale_Dealsbar_Admin {
 		$diff_new_settings = array_diff_assoc( $new_settings, $old_settings );
 
 		if ( isset( $diff_new_settings['affiliate-id'] ) || isset( $diff_new_settings['api-token'] ) || isset( $diff_new_settings['api-secret'] ) ) {
-				//can't easily inject ShareASale_Dealsbar_API $shareasale_api as a ShareASale_Dealsbar_Admin dependency since it relies on values in the $new_settings
-				$shareasale_api = new ShareASale_Dealsbar_API( $new_settings['affiliate-id'], $new_settings['api-token'], $new_settings['api-secret'] );
-				$req = $shareasale_api->token_count()->exec();
+			//can't easily inject ShareASale_Dealsbar_API $shareasale_api as a ShareASale_Dealsbar_Admin dependency since it relies on values in the $new_settings
+			$shareasale_api = new ShareASale_Dealsbar_API( $new_settings['affiliate-id'], $new_settings['api-token'], $new_settings['api-secret'] );
+			$req = $shareasale_api->token_count()->exec();
 
 			if ( ! $req ) {
 				add_settings_error(
@@ -468,9 +468,9 @@ class ShareASale_Dealsbar_Admin {
 					'</span>'
 				);
 				$new_settings['affiliate-id'] = $new_settings['api-token'] = $new_settings['api-secret'] = '';
-			}/* else {
+			} else {
 				do_action( 'dealsbardealsupdate' );
-			}*/
+			}
 		}
 		//array order is important to the merge
 		return array_merge( $old_settings, $new_settings );
