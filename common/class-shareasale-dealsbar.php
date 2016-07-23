@@ -16,55 +16,52 @@ class ShareASale_Dealsbar {
 
 		$this->load_dependencies();
 
-		$this->define_common_hooks();
+		$this->define_frontend_hooks();
 		$this->define_admin_hooks();
 		$this->define_installer_hooks();
 		$this->define_uninstaller_hooks();
 		$this->define_updater_hooks();
 	}
 
-	/**
-	* Loads the plugin's dependencies
-	*/
 	private function load_dependencies() {
-
-		add_option( 'dealsbar_options', '' );
-		/**
-		* require the classes used in the hooks to be loaded
-		*/
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-shareasale-dealsbar-admin.php';
-		require_once plugin_dir_path( __FILE__ ) . 'class-shareasale-dealsbar-api.php';
 		require_once plugin_dir_path( __FILE__ ) . 'class-shareasale-dealsbar-loader.php';
 		require_once plugin_dir_path( __FILE__ ) . 'class-shareasale-dealsbar-toolbar.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-shareasale-dealsbar-admin.php';
 		require_once plugin_dir_path( __FILE__ ) . 'class-shareasale-dealsbar-installer.php';
 		require_once plugin_dir_path( __FILE__ ) . 'class-shareasale-dealsbar-uninstaller.php';
 		require_once plugin_dir_path( __FILE__ ) . 'class-shareasale-dealsbar-updater.php';
 
 		$this->loader  = new ShareASale_Dealsbar_Loader();
-		$this->toolbar = new ShareASale_Dealsbar_Toolbar( $this->get_version(), $this->loader );
+		$this->toolbar = new ShareASale_Dealsbar_Toolbar( $this->get_version() );
 	}
-	/**
-	* Setup the actions/methods to run on the ShareASale_Dealsbar_Admin object when certain WordPress hooks happen
-	*/
-	private function define_common_hooks() {
-		//frontend theme actions
-		$this->loader->add_action( 'wp_footer', $this->toolbar, 'render_toolbar' );
+
+	private function define_frontend_hooks() {
+		//frontend facing toolbar actions
+		$this->loader->add_action( 'wp_enqueue_scripts', $this->toolbar, 'enqueue_styles' );
+		$this->loader->add_action( 'wp_enqueue_scripts', $this->toolbar, 'enqueue_scripts' );
+		$this->loader->add_action( 'wp_enqueue_scripts', $this->toolbar, 'render_custom_css' );
+		$this->loader->add_action( 'wp_footer',          $this->toolbar, 'render_toolbar' );
 	}
 
 	private function define_admin_hooks() {
 		$admin   = new ShareASale_Dealsbar_Admin( $this->get_version() );
-		//admin actions
+		//general admin actions
 		$this->loader->add_action( 'admin_enqueue_scripts', $admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $admin, 'enqueue_scripts' );
 		$this->loader->add_action( 'admin_init',            $admin, 'admin_init' );
 		$this->loader->add_action( 'admin_menu',            $admin, 'admin_menu' );
+		//admin facing toolbar actions
+		$this->loader->add_action( 'admin_enqueue_scripts',               $this->toolbar, 'enqueue_styles' );
+		$this->loader->add_action( 'admin_enqueue_scripts',               $this->toolbar, 'enqueue_scripts' );
+		$this->loader->add_action( 'admin_enqueue_scripts',               $this->toolbar, 'render_custom_css' );
 		$this->loader->add_action( 'admin_footer-toplevel_page_dealsbar', $this->toolbar, 'render_toolbar' );
 		//admin filters
-		$this->loader->add_filter( 'plugin_action_links_' . DEALSBAR_PLUGIN_FILENAME, $admin, 'render_settings_shortcut' );
+		$this->loader->add_filter( 'plugin_action_links_' . SHAREASALE_DEALSBAR_PLUGIN_FILENAME, $admin, 'render_settings_shortcut' );
 	}
 
 	private function define_installer_hooks() {
-	    return;
+	    $installer = new ShareASale_Dealsbar_Installer( $this->get_version() );
+	    register_activation_hook( __FILE__, array( $installer, 'install' ) );
 	}
 
 	private function define_uninstaller_hooks() {
@@ -75,17 +72,10 @@ class ShareASale_Dealsbar {
 		return;
 	}
 
-	/**
-	* Wrapper for the loader object to execute now that dependencies and hooks were setup in the constructor
-	*/
 	public function run() {
 		$this->loader->run();
 	}
 
-	/**
-	* Simply returns the plugin version
-	* Useful for cache-busting on the frontend
-	*/
 	public function get_version() {
 		return $this->version;
 	}

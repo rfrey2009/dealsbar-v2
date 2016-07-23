@@ -9,7 +9,7 @@
 if ( ! defined( 'WPINC' ) ) {
 	die;
 }
-define( 'DEALSBAR_PLUGIN_FILENAME', plugin_basename( __FILE__ ) );
+define( 'SHAREASALE_DEALSBAR_PLUGIN_FILENAME', plugin_basename( __FILE__ ) );
 //require the core plugin class
 require_once plugin_dir_path( __FILE__ ) . 'common/class-shareasale-dealsbar.php';
 /**

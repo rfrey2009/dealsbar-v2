@@ -5,36 +5,20 @@ class ShareASale_Dealsbar_Toolbar {
 	* @var float $version Plugin version, used for cache-busting
 	* @var array $settings user's configuration choices for dealsbar toolbar design and Merchants
 	* @var array $deals array containing chosen Merchant's deals for the dealsbar toolbar
-	* @var ShareASale_Dealsbar_Loader $loader Loader dependency injected object that coordinates actions and filters between core plugin and classes
 	*/
-	private $wpdb, $version, $settings, $deals, $loader;
+	private $wpdb, $version, $settings, $deals;
 
-	public function __construct( $version, $loader ) {
+	public function __construct( $version ) {
 		$this->version = $version;
-		$this->loader  = $loader;
 		$this->load_dependencies();
-
-		$this->define_toolbar_hooks();
 	}
 
 	private function load_dependencies() {
-		//should setup everything the methods called in __construct need to work
 		global $wpdb;
 
-		$this->wpdb      = &$wpdb;
-		@$this->settings  = get_option( 'dealsbar_options' );
-		$this->deals     = $this->get_deals( @$this->settings['toolbar-merchants'] );
-	}
-
-	private function define_toolbar_hooks() {
-		//admin
-		$this->loader->add_action( 'admin_enqueue_scripts', $this, 'enqueue_styles' );
-		$this->loader->add_action( 'admin_enqueue_scripts', $this, 'enqueue_scripts' );
-		$this->loader->add_action( 'admin_enqueue_scripts', $this, 'render_custom_css' );
-		//frontend
-		$this->loader->add_action( 'wp_enqueue_scripts',    $this, 'enqueue_styles' );
-		$this->loader->add_action( 'wp_enqueue_scripts',    $this, 'enqueue_scripts' );
-		$this->loader->add_action( 'wp_enqueue_scripts',    $this, 'render_custom_css' );
+		$this->wpdb     = &$wpdb;
+		$this->settings = get_option( 'dealsbar_options' );
+		$this->deals    = $this->get_deals( @$this->settings['toolbar-merchants'] );
 	}
 
 	private function get_deals( $merchants ) {
@@ -82,6 +66,7 @@ class ShareASale_Dealsbar_Toolbar {
 			array(),
 			'4.6.3'
 		);
+
 		wp_enqueue_style(
 			'dealsbar-standard-styles',
 			plugin_dir_url( __FILE__ ) . 'css/shareasale-dealsbar.css',
@@ -94,21 +79,21 @@ class ShareASale_Dealsbar_Toolbar {
 		if ( ! @$this->settings['toolbar-setting'] || ( is_admin() && 'toplevel_page_dealsbar' !== $hook ) ) {
 			return;
 		}
-			wp_enqueue_script(
-				'dealsbar-deals-toolbar',
-				plugin_dir_url( __FILE__ ) . 'js/shareasale-dealsbar-toolbar.js',
-				array( 'jquery' ),
-				$this->version
-			);
+		wp_enqueue_script(
+			'dealsbar-deals-toolbar',
+			plugin_dir_url( __FILE__ ) . 'js/shareasale-dealsbar-toolbar.js',
+			array( 'jquery' ),
+			$this->version
+		);
 
-			wp_localize_script(
-				'dealsbar-deals-toolbar',
-				'dealsbarToolbarSettings',
-				array(
-					'start_index' => '',//$random_deal_index,
-					'deals'       => '',//$results,
-					'is_backend'  => '', //$is_backend
-				)
-			);
+		wp_localize_script(
+			'dealsbar-deals-toolbar',
+			'dealsbarToolbarSettings',
+			array(
+				'start_index' => '',//$random_deal_index,
+				'deals'       => '',//$results,
+				'is_backend'  => '',//$is_backend
+			)
+		);
 	}
 }
