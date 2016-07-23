@@ -19,7 +19,7 @@ class ShareASale_Dealsbar_Installer {
 		$this->wpdb = &$wpdb;
 	}
 
-	public function install() {
+	static function install() {
 		add_option( 'dealsbar_options', '' );
 
 		$deals_table = $this->wpdb->prefix . 'deals';

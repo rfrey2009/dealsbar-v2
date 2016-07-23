@@ -17,7 +17,7 @@ class ShareASale_Dealsbar_Uninstaller {
 		$this->wpdb = &$wpdb;
 	}
 
-	public function uninstall() {
+	static function uninstall() {
 		$deals_table = $this->wpdb->prefix . 'deals';
 		//nuke deals table
 		$query = 'DROP TABLE ' . $deals_table;
@@ -29,7 +29,7 @@ class ShareASale_Dealsbar_Uninstaller {
 		delete_option( 'dealsbar_options' );
 	}
 
-	public function disable() {
+	static function disable() {
 		wp_clear_scheduled_hook( 'dealsbardealsupdate' );
 	}
 }

@@ -1,14 +1,14 @@
 <div id = "dealsbar-deals-toolbar"> 
   <span id = "dealsbar-toolbar-ad" title = "Click to get your own deals bar!">
     <a target = "_blank" href ="http://dealsbar.shareasale.com">
-      <img src = "wp-content/plugins/dealsbar updated/common/images/dealsbarbw.png" >
+      <img src = "!!plugin-url!!images/dealsbarbw.png" >
       </a>
   </span>
   <span id = "dealsbar-toolbar-warning" title = "Save to see your changes">[dealsbar preview]</span>
   <span id = "dealsbar-deal">
   <span id = "dealsbar-deal-title">!!toolbar-text!!</span>  
-    <a id = "dealsbar-deal-text" href = "!!toolbar-merchant-deal-link!!" target = "_blank">
-      !!toolbar-merchant-deal!! - !!toolbar-merchant!!
+    <a id = "dealsbar-deal-text" href = "!!toolbar-deal-link!!" target = "_blank">
+      !!toolbar-deal-title!! - !!toolbar-deal-merchant!!
     </a>
   </span>
   <div id = "dealsbar-toolbar-navi">

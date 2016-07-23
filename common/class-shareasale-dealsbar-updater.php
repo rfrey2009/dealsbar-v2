@@ -25,10 +25,10 @@ class ShareASale_Dealsbar_Updater {
 		$this->wpdb->query( 'TRUNCATE TABLE ' . $table ); //empty table before adding deals so only current, joined merchants deals remain
 
 		$shareasale_api = new ShareASale_Dealsbar_API( $options['affiliate-id'], $options['api-token'], $options['api-secret'] );
-		$coupons        = $shareasale_api->coupon_deals( array( 'current' => 1 ) )->exec();
+		$deals          = $shareasale_api->coupon_deals( array( 'current' => 1 ) )->exec();
 
-		if ( false != $coupons ) {
-			foreach ( $coupons->dealcouponlistreportrecord as $deal ) {
+		if ( false != $deals ) {
+			foreach ( $deals->dealcouponlistreportrecord as $deal ) {
 				$values = array(
 					'dealid' => $deal->dealid,
 					'merchantid' => $deal->merchantid,

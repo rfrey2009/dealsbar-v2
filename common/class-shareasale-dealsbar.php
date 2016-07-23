@@ -61,14 +61,14 @@ class ShareASale_Dealsbar {
 
 	private function define_installer_hooks() {
 	    $installer = new ShareASale_Dealsbar_Installer( $this->get_version() );
-	    register_activation_hook( __FILE__, array( $installer, 'install' ) );
+	    register_activation_hook( __FILE__, array( 'ShareASale_Dealsbar_Installer', 'install' ) );
 	}
 
 	private function define_uninstaller_hooks() {
 		$uninstaller = new ShareASale_Dealsbar_Uninstaller( $this->get_version() );
 
-		register_deactivation_hook( __FILE__, array( $uninstaller, 'disable' ) );
-	    register_uninstall_hook( __FILE__, array( $uninstaller, 'uninstall' ) );
+		register_deactivation_hook( __FILE__, array( 'ShareASale_Dealsbar_Uninstaller', 'disable' ) );
+	    register_uninstall_hook( __FILE__, array( 'ShareASale_Dealsbar_Uninstaller', 'uninstall' ) );
 	}
 
 	private function define_updater_hooks() {

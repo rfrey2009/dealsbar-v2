@@ -5,8 +5,9 @@ class ShareASale_Dealsbar_Toolbar {
 	* @var float $version Plugin version, used for cache-busting
 	* @var array $settings user's configuration choices for dealsbar toolbar design and Merchants
 	* @var array $deals array containing chosen Merchant's deals for the dealsbar toolbar
+	* @var int $start_index index of random starting deal to display in toolbar
 	*/
-	private $wpdb, $version, $settings, $deals;
+	private $wpdb, $version, $settings, $deals, $start_index;
 
 	public function __construct( $version ) {
 		$this->version = $version;
@@ -16,13 +17,37 @@ class ShareASale_Dealsbar_Toolbar {
 	private function load_dependencies() {
 		global $wpdb;
 
-		$this->wpdb     = &$wpdb;
-		$this->settings = get_option( 'dealsbar_options' );
-		$this->deals    = $this->get_deals( @$this->settings['toolbar-merchants'] );
+		$this->wpdb        = &$wpdb;
+		$this->settings    = get_option( 'dealsbar_options' );
+		$this->deals       = $this->get_deals( @$this->settings['toolbar-merchants'] );
+		$this->start_index = array_rand( $this->deals );
 	}
 
 	private function get_deals( $merchants ) {
-		return;
+		$deals_table = $this->wpdb->prefix . 'deals';
+
+		if ( ! empty( $merchants ) ) {
+			$sql = '
+				SELECT * FROM '
+				. $deals_table . '
+				WHERE merchant IN('
+				. implode( ', ', array_fill( 0, count( $merchants ) , '%s' ) ) .
+				')';
+			// Call $this->wpdb->prepare passing the values of the array as separate arguments
+			$query = call_user_func_array( array( $this->wpdb, 'prepare' ), array_merge( array( $sql ), $merchants ) );
+			//get the results, and decode all deal titles HTML entities ahead while adding a dynamic afftrack value
+			$deals = array_map( function( $obj ) {
+							$deal = array();
+							$deal['toolbar-deal-title']    = html_entity_decode( $obj->title );
+							$deal['toolbar-deal-link']     = $obj->trackingurl . '&afftrack=' . @$this->settings['toolbar-afftrack'];
+							$deal['toolbar-deal-merchant'] = $obj->merchant;
+							return $deal;
+						}, $this->wpdb->get_results( $query )
+			);
+			return $deals;
+		} else {
+			return array();
+		}
 	}
 
 	public function render_custom_css() {
@@ -53,6 +78,14 @@ class ShareASale_Dealsbar_Toolbar {
 		}
 
 		$template = file_get_contents( plugin_dir_path( __FILE__ ) . 'templates/shareasale-dealsbar-toolbar.php' );
+		$template = str_replace( array( '!!plugin-url!!', '!!toolbar-text!!' ), array( plugin_dir_url ( __FILE__ ), @$this->settings['toolbar-text'] ), $template );
+
+		$random_deal = $this->deals[ $this->start_index ];
+
+		foreach ( $random_deal as $macro => $deal ) {
+			$template = str_replace( "!!$macro!!", $deal, $template );
+		}
+
 		echo wp_kses( $template, wp_kses_allowed_html( 'post' ) );
 	}
 
@@ -90,9 +123,8 @@ class ShareASale_Dealsbar_Toolbar {
 			'dealsbar-deals-toolbar',
 			'dealsbarToolbarSettings',
 			array(
-				'start_index' => '',//$random_deal_index,
-				'deals'       => '',//$results,
-				'is_backend'  => '',//$is_backend
+				'start_index' => $this->start_index,
+				'deals'       => $this->deals,
 			)
 		);
 	}

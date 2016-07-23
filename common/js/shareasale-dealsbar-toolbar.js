@@ -1,6 +1,6 @@
 jQuery(document).ready(function() {
 
-	if(dealsbarToolbarSettings.is_backend){ //check whether we're on the settings page or live blogger's frontend
+	if (document.location.pathname.indexOf("/admin.php") !== -1) { //check whether we're on the settings page or live blogger's frontend
 		jQuery("#slider").on( "slide slidechange", function( event, ui ) {
 
 			jQuery("#dealsbar-deals-toolbar").css('height',ui.value);
@@ -58,7 +58,7 @@ jQuery(document).ready(function() {
 			jQuery('#dealsbar-deals-toolbar').hide();
 
 		var deal = deals[btCurIndex];	  		
-		jQuery('a#dealsbar-deal-text').text(deal.description + ' - ' + deal.merchant).attr("href", deal.trackingurl);
+		jQuery('a#dealsbar-deal-text').text(deal['toolbar-deal-merchant'] + ' - ' + deal['toolbar-deal-title']).attr("href", deal['toolbar-deal-link']);
 
 	});	
 });
