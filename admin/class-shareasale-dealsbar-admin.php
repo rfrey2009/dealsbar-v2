@@ -468,11 +468,17 @@ class ShareASale_Dealsbar_Admin {
 					'</span>'
 				);
 				$new_settings['affiliate-id'] = $new_settings['api-token'] = $new_settings['api-secret'] = '';
-			} else {
-				do_action( 'dealsbardealsupdate' );
 			}
 		}
 		//array order is important to the merge
 		return array_merge( $old_settings, $new_settings );
+	}
+
+	public function update_option_dealsbar_options( $old_settings, $new_settings ) {
+		$diff_new_settings = array_diff_assoc( $new_settings, $old_settings );
+		//if first time or different successful API credentials, immediately do a deal sync
+		if ( isset( $diff_new_settings['affiliate-id'] ) || isset( $diff_new_settings['api-token'] ) || isset( $diff_new_settings['api-secret'] ) ) {
+			do_action( 'dealsbardealsupdate' );
+		}
 	}
 }

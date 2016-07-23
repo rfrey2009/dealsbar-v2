@@ -46,7 +46,13 @@ class ShareASale_Dealsbar_Toolbar {
 			);
 			return $deals;
 		} else {
-			return array();
+			return array(
+						array(
+							'toolbar-deal-title' => 'Example Deal Title',
+							'toolbar-deal-link' => 'http://shareasale.com',
+							'toolbar-deal-merchant' => 'Example Merchant',
+						),
+					);
 		}
 	}
 
@@ -78,7 +84,7 @@ class ShareASale_Dealsbar_Toolbar {
 		}
 
 		$template = file_get_contents( plugin_dir_path( __FILE__ ) . 'templates/shareasale-dealsbar-toolbar.php' );
-		$template = str_replace( array( '!!plugin-url!!', '!!toolbar-text!!' ), array( plugin_dir_url ( __FILE__ ), @$this->settings['toolbar-text'] ), $template );
+		$template = str_replace( array( '!!plugin-url!!', '!!toolbar-text!!' ), array( plugin_dir_url( __FILE__ ), @$this->settings['toolbar-text'] ), $template );
 
 		$random_deal = $this->deals[ $this->start_index ];
 

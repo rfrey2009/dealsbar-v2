@@ -12,7 +12,7 @@ class ShareASale_Dealsbar_Updater {
 	}
 
 	private function load_dependencies() {
-		require_once plugin_dir_path( __FILE__ ) . '../common/class-shareasale-dealsbar-api.php';
+		require_once 'class-shareasale-dealsbar-api.php';
 		global $wpdb;
 
 		$this->wpdb = &$wpdb;
@@ -25,29 +25,31 @@ class ShareASale_Dealsbar_Updater {
 		$this->wpdb->query( 'TRUNCATE TABLE ' . $table ); //empty table before adding deals so only current, joined merchants deals remain
 
 		$shareasale_api = new ShareASale_Dealsbar_API( $options['affiliate-id'], $options['api-token'], $options['api-secret'] );
-		$deals          = $shareasale_api->coupon_deals( array( 'current' => 1 ) )->exec();
+		$result         = $shareasale_api->coupon_deals( array( 'current' => 1, 'XMLFormat' => 1 ) )->exec();
 
-		if ( false != $deals ) {
+		if ( false != $result ) {
+
+			$deals = simplexml_load_string( $shareasale_api->get_response() );
+
 			foreach ( $deals->dealcouponlistreportrecord as $deal ) {
 				$values = array(
-					'dealid' => $deal->dealid,
-					'merchantid' => $deal->merchantid,
-					'merchant' => $deal->merchant,
-					'startdate' => $deal->startdate,
-					'enddate' => $deal->enddate,
-					'publishdate' => $deal->publishdate,
-					'title' => $deal->title,
-					'bigimage' => $deal->bigimage,
-					'trackingurl' => $deal->trackingurl,
-					'smallimage' => $deal->smallimage,
-					'category' => $deal->category,
-					'description' => $deal->description,
+					'dealid'       => $deal->dealid,
+					'merchantid'   => $deal->merchantid,
+					'merchant'     => $deal->merchant,
+					'startdate'    => $deal->startdate,
+					'enddate'      => $deal->enddate,
+					'publishdate'  => $deal->publishdate,
+					'title'        => $deal->title,
+					'bigimage'     => $deal->bigimage,
+					'trackingurl'  => $deal->trackingurl,
+					'smallimage'   => $deal->smallimage,
+					'category'     => $deal->category,
+					'description'  => $deal->description,
 					'restrictions' => $deal->restrictions,
-					'keywords' => $deal->keywords,
-					'couponcode' => $deal->couponcode,
-					'editdate' => $deal->editdate,
+					'keywords'     => $deal->keywords,
+					'couponcode'   => $deal->couponcode,
+					'editdate'     => $deal->editdate,
 				);
-
 				$this->wpdb->insert( $table, $values );
 			}
 		}

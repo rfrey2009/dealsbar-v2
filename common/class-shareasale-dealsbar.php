@@ -44,10 +44,11 @@ class ShareASale_Dealsbar {
 	private function define_admin_hooks() {
 		$admin   = new ShareASale_Dealsbar_Admin( $this->get_version() );
 		//general admin actions
-		$this->loader->add_action( 'admin_enqueue_scripts', $admin, 'enqueue_styles' );
-		$this->loader->add_action( 'admin_enqueue_scripts', $admin, 'enqueue_scripts' );
-		$this->loader->add_action( 'admin_init',            $admin, 'admin_init' );
-		$this->loader->add_action( 'admin_menu',            $admin, 'admin_menu' );
+		$this->loader->add_action( 'admin_enqueue_scripts',          $admin, 'enqueue_styles' );
+		$this->loader->add_action( 'admin_enqueue_scripts',          $admin, 'enqueue_scripts' );
+		$this->loader->add_action( 'admin_init',                     $admin, 'admin_init' );
+		$this->loader->add_action( 'admin_menu',                     $admin, 'admin_menu' );
+		$this->loader->add_action( 'update_option_dealsbar_options', $admin, 'update_option_dealsbar_options' );
 		//admin facing toolbar actions
 		$this->loader->add_action( 'admin_enqueue_scripts',               $this->toolbar, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts',               $this->toolbar, 'enqueue_scripts' );

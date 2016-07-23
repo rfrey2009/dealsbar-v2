@@ -75,7 +75,7 @@ class ShareASale_Dealsbar_API {
 		curl_setopt( $ch, CURLOPT_HTTPHEADER, $this->headers );
 		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
 		curl_setopt( $ch, CURLOPT_HEADER, 0 );
-		curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false ); //set to true in production
+		curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false );
 		//make the API request
 		$response = curl_exec( $ch );
 		curl_close( $ch );
@@ -107,7 +107,5 @@ class ShareASale_Dealsbar_API {
 	public function get_error_msg() {
 		return $this->error_msg;
 	}
-
-	//setters
 }
 
