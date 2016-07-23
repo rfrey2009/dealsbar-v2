@@ -22,7 +22,7 @@ class ShareASale_Dealsbar_Installer {
 	public function install() {
 		add_option( 'dealsbar_options', '' );
 
-		$deals_table = $wpdb->prefix . 'deals';
+		$deals_table = $this->wpdb->prefix . 'deals';
 		$query = 'CREATE TABLE ' . $deals_table . ' (
 			`dealid` BIGINT( 25 ) NOT NULL ,
 			`merchantid` INT( 10 ) NOT NULL ,
@@ -50,7 +50,9 @@ class ShareASale_Dealsbar_Installer {
 		$timestamp = strtotime( 'today' . $random_hour . 'PM EST' );
 
 		if ( ! wp_get_schedule( 'dealsbardealsupdate' ) ) {
-			//hook must not contain underscores or uppercase chars... http://codex.wordpress.org/Function_Reference/wp_schedule_event
+			/* hook must not contain underscores or uppercase chars...
+			* http://codex.wordpress.org/Function_Reference/wp_schedule_event
+			*/
 			wp_schedule_event( $timestamp, 'daily', 'dealsbardealsupdate' );
 		}
 	}

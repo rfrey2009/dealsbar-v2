@@ -275,7 +275,7 @@ class ShareASale_Dealsbar_Admin {
 	}
 
 	public function admin_menu() {
-		// Add the top-level admin menu
+		//Add the top-level admin menu
 		$page_title = 'ShareASale Dealsbar Settings';
 		$menu_title = 'Dealsbar';
 		$capability = 'manage_options';
@@ -283,7 +283,7 @@ class ShareASale_Dealsbar_Admin {
 		$function   = array( $this, 'render_settings_page' );
 		$icon_url   = plugin_dir_url( __FILE__ ) . 'images/star_big2.png';
 		add_menu_page( $page_title, $menu_title, $capability, $menu_slug, $function, $icon_url );
-		// Add submenu page with same slug as parent to ensure no duplicates
+		//Add submenu page with same slug as parent to ensure no duplicates
 		$sub_menu_title = 'Settings';
 		add_submenu_page( $menu_slug, $page_title, $sub_menu_title, $capability, $menu_slug, $function );
 	}
@@ -468,12 +468,10 @@ class ShareASale_Dealsbar_Admin {
 					'</span>'
 				);
 				$new_settings['affiliate-id'] = $new_settings['api-token'] = $new_settings['api-secret'] = '';
-			}
+			}/* else {
+				do_action( 'dealsbardealsupdate' );
+			}*/
 		}
-		// else {
-		// 		//if API request to ShareASale successful with new creds, do immediate deals sync after settings successfully updated mainly for first-time settings entries
-		// 		//add_action( 'update_option_dealsbar_options', 'db_do_deal_update' );
-		// }
 		//array order is important to the merge
 		return array_merge( $old_settings, $new_settings );
 	}

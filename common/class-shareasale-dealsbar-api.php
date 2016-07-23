@@ -24,13 +24,13 @@ class ShareASale_Dealsbar_API {
 		$protocol    = 'https://';
 		$hostname    = 'api.shareasale.com/';
 		$handler     = 'x.cfm';
-		$params      = array_merge( [
-									'action'       => $this->action,
-									'affiliateid'  => $this->affiliate_id,
-									'token'        => $this->api_token,
-									'version'      => $this->api_version,
-									],
-		$params );
+		$params      = array_merge( array(
+										'action'       => $this->action,
+										'affiliateid'  => $this->affiliate_id,
+										'token'        => $this->api_token,
+										'version'      => $this->api_version,
+									), $params
+		);
 
 		$query_string = '?' . http_build_query( $params );
 		$url = $protocol . $hostname . $handler . $query_string;

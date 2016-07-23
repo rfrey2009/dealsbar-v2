@@ -65,11 +65,15 @@ class ShareASale_Dealsbar {
 	}
 
 	private function define_uninstaller_hooks() {
-	    return;
+		$uninstaller = new ShareASale_Dealsbar_Uninstaller( $this->get_version() );
+
+		register_deactivation_hook( __FILE__, array( $uninstaller, 'disable' ) );
+	    register_uninstall_hook( __FILE__, array( $uninstaller, 'uninstall' ) );
 	}
 
 	private function define_updater_hooks() {
-		return;
+		$updater = new ShareASale_Dealsbar_Updater( $this->get_version() );
+		$this->loader->add_action( 'dealsbardealsupdate', $updater, 'update' );
 	}
 
 	public function run() {
