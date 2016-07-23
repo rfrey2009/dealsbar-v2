@@ -1,27 +1,12 @@
 <?php
 class ShareASale_Dealsbar_Uninstaller {
-	/**
-	* @var Wpdb $wpdb WordPress global database connection singleton
-	* @var float $version Plugin version, used for cache-busting
-	*/
-	private $wpdb, $version;
 
-	public function __construct( $version ) {
-		$this->version = $version;
-		$this->load_dependencies();
-	}
-
-	private function load_dependencies() {
+	public static function uninstall() {
 		global $wpdb;
-
-		$this->wpdb = &$wpdb;
-	}
-
-	static function uninstall() {
-		$deals_table = $this->wpdb->prefix . 'deals';
-		//nuke deals table
+		$deals_table = $wpdb->prefix . 'deals';
+		//drop deals table
 		$query = 'DROP TABLE ' . $deals_table;
-		$this->wpdb->query( $query );
+		$wpdb->query( $query );
 		//clear crons
 		wp_clear_scheduled_hook( 'dealsbardealsupdate' );
 		//remove settings
@@ -29,7 +14,7 @@ class ShareASale_Dealsbar_Uninstaller {
 		delete_option( 'dealsbar_options' );
 	}
 
-	static function disable() {
+	public static function disable() {
 		wp_clear_scheduled_hook( 'dealsbardealsupdate' );
 	}
 }

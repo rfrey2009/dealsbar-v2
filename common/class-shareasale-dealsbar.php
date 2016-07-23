@@ -1,7 +1,5 @@
 <?php
-
 class ShareASale_Dealsbar {
-
 	/**
 	* @var ShareASale_Dealsbar_Toolbar $toolbar object that controls the state, type (admin or frontend), and rendering of dealsbar toolbar itself
 	* @var ShareASale_Dealsbar_Loader $loader Loader object that coordinates actions and filters between core plugin and classes
@@ -60,15 +58,12 @@ class ShareASale_Dealsbar {
 	}
 
 	private function define_installer_hooks() {
-	    $installer = new ShareASale_Dealsbar_Installer( $this->get_version() );
-	    register_activation_hook( __FILE__, array( 'ShareASale_Dealsbar_Installer', 'install' ) );
+	    register_activation_hook( SHAREASALE_DEALSBAR_PLUGIN_FILENAME, array( 'ShareASale_Dealsbar_Installer', 'install' ) );
 	}
 
 	private function define_uninstaller_hooks() {
-		$uninstaller = new ShareASale_Dealsbar_Uninstaller( $this->get_version() );
-
-		register_deactivation_hook( __FILE__, array( 'ShareASale_Dealsbar_Uninstaller', 'disable' ) );
-	    register_uninstall_hook( __FILE__, array( 'ShareASale_Dealsbar_Uninstaller', 'uninstall' ) );
+		register_deactivation_hook( SHAREASALE_DEALSBAR_PLUGIN_FILENAME, array( 'ShareASale_Dealsbar_Uninstaller', 'disable' ) );
+	    register_uninstall_hook( SHAREASALE_DEALSBAR_PLUGIN_FILENAME, array( 'ShareASale_Dealsbar_Uninstaller', 'uninstall' ) );
 	}
 
 	private function define_updater_hooks() {
