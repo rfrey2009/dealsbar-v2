@@ -12,22 +12,26 @@ class ShareASale_Dealsbar_Loader {
 	/**
 	* Adds a desired object method call to a WordPress hook name
 	 *
-	* @param string $hook A valid WordPress hook name
-	* @param object $component An object with a method to run on a given WordPress hook's trigger
-	* @param string $callback A method's name on the $component
+	* @param string $hook a valid WordPress hook name
+	* @param object $component an object with a method to run on a given WordPress hook's trigger
+	* @param string $callback a method's name on the $component
+	* @param string $priority method's priority to run after hook fires
+	* @param string $args number of arguments the triggered hook will pass to method
 	*/
-	public function add_action( $hook, $component, $callback ) {
-		$this->actions = $this->add( $this->actions, $hook, $component, $callback );
+	public function add_action( $hook, $component, $callback, $optionals = array( 'priority' => 10, 'args' => 1 ) ) {
+		$this->actions = $this->add( $this->actions, $hook, $component, $callback, $optionals['priority'], $optionals['args'] );
 	}
 	/**
 	* Adds a desired object method call to a WordPress filter name
 	*
 	* @param string $hook A valid WordPress filter name
-	* @param object $component An object with a method to run on a given WordPress filter call
+	* @param object $component An object with a method to run on a given WordPress filter's trigger
 	* @param string $callback A method's name on the $component
+	* @param string $priority method's priority to run after filter fires
+	* @param string $args number of arguments the triggered filter will pass to method
 	*/
-	public function add_filter( $hook, $component, $callback ) {
-		$this->filters = $this->add( $this->filters, $hook, $component, $callback );
+	public function add_filter( $hook, $component, $callback, $optionals = array( 'priority' => 10, 'args' => 1 ) ) {
+		$this->filters = $this->add( $this->filters, $hook, $component, $callback, $optionals['priority'], $optionals['args'] );
 	}
 
 	/**
@@ -39,23 +43,25 @@ class ShareASale_Dealsbar_Loader {
 	* @param string $callback A method's name on the $component
 	* @return array Returns the respective array after storing the new hook or filter on it
 	*/
-	private function add( $hooks, $hook, $component, $callback ) {
+	private function add( $hooks, $hook, $component, $callback, $priority, $args ) {
 		$hooks[] = array(
 			'hook'      => $hook,
 			'component' => $component,
 			'callback'  => $callback,
+			'priority'  => $priority,
+			'args'      => $args,
 		);
 		return $hooks;
 	}
 	/**
-	* Loops through all $hooks and $filters array to call the WordPress API for each, wiring everything up
+	* Loops through all $hooks and $filters array to call the WordPress API for each, wiring everything up at once
 	*/
 	public function run() {
 		foreach ( $this->filters as $hook ) {
-			add_filter( $hook['hook'], array( $hook['component'], $hook['callback'] ) );
+			add_filter( $hook['hook'], array( $hook['component'], $hook['callback'] ), $hook['priority'], $hook['args'] );
 		}
 		foreach ( $this->actions as $hook ) {
-			add_action( $hook['hook'], array( $hook['component'], $hook['callback'] ) );
+			add_action( $hook['hook'], array( $hook['component'], $hook['callback'] ), $hook['priority'], $hook['args'] );
 		}
 	}
 }

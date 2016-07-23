@@ -48,7 +48,7 @@ class ShareASale_Dealsbar {
 		$this->loader->add_action( 'admin_enqueue_scripts',          $admin, 'enqueue_scripts' );
 		$this->loader->add_action( 'admin_init',                     $admin, 'admin_init' );
 		$this->loader->add_action( 'admin_menu',                     $admin, 'admin_menu' );
-		$this->loader->add_action( 'update_option_dealsbar_options', $admin, 'update_option_dealsbar_options' );
+		$this->loader->add_action( 'update_option_dealsbar_options', $admin, 'update_option_dealsbar_options', array( 'priority' => 10, 'args' => 2 ) );
 		//admin facing toolbar actions
 		$this->loader->add_action( 'admin_enqueue_scripts',               $this->toolbar, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts',               $this->toolbar, 'enqueue_scripts' );

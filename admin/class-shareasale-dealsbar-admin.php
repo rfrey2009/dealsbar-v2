@@ -475,7 +475,7 @@ class ShareASale_Dealsbar_Admin {
 	}
 
 	public function update_option_dealsbar_options( $old_settings, $new_settings ) {
-		$diff_new_settings = array_diff_assoc( $new_settings, $old_settings );
+		$diff_new_settings = array_diff_assoc( $new_settings, (array) $old_settings );
 		//if first time or different successful API credentials, immediately do a deal sync
 		if ( isset( $diff_new_settings['affiliate-id'] ) || isset( $diff_new_settings['api-token'] ) || isset( $diff_new_settings['api-secret'] ) ) {
 			do_action( 'dealsbardealsupdate' );
