@@ -314,39 +314,39 @@ class ShareASale_Dealsbar_Admin {
 		}
 		echo wp_kses( $template, array(
 									'input' => array(
-										'accept' => true,
-										'align' => true,
-										'alt' => true,
-										'autocomplete' => true,
-										'autofocus' => true,
-										'checked' => true,
-										'class' => true,
-										'dirname' => true,
-										'disabled' => true,
-										'form' => true,
-										'formaction' => true,
-										'formenctype' => true,
-										'formmethod' => true,
+										'accept'         => true,
+										'align'          => true,
+										'alt'            => true,
+										'autocomplete'   => true,
+										'autofocus'      => true,
+										'checked'        => true,
+										'class'          => true,
+										'dirname'        => true,
+										'disabled'       => true,
+										'form'           => true,
+										'formaction'     => true,
+										'formenctype'    => true,
+										'formmethod'     => true,
 										'formnovalidate' => true,
-										'formtarget' => true,
-										'height' => true,
-										'id' => true,
-										'list' => true,
-										'max' => true,
-										'maxlength' => true,
-										'min' => true,
-										'multiple' => true,
-										'name' => true,
-										'pattern' => true,
-										'placeholder' => true,
-										'readonly' => true,
-										'required' => true,
-										'size' => true,
-										'src' => true,
-										'step' => true,
-										'type' => true,
-										'value' => true,
-										'width' => true,
+										'formtarget'     => true,
+										'height'         => true,
+										'id'             => true,
+										'list'           => true,
+										'max'            => true,
+										'maxlength'      => true,
+										'min'            => true,
+										'multiple'       => true,
+										'name'           => true,
+										'pattern'        => true,
+										'placeholder'    => true,
+										'readonly'       => true,
+										'required'       => true,
+										'size'           => true,
+										'src'            => true,
+										'step'           => true,
+										'type'           => true,
+										'value'          => true,
+										'width'          => true,
 									),
 								)
 		);
@@ -449,7 +449,7 @@ class ShareASale_Dealsbar_Admin {
 		array_unshift( $links, $settings_link );
 		return $links;
 	}
-
+	//mainly to sanitize the incoming API credential inputs and check if they're valid
 	public function sanitize_settings( $new_settings = array() ) {
 		$old_settings      = get_option( 'dealsbar_options' ) ?: array();
 		$diff_new_settings = array_diff_assoc( $new_settings, $old_settings );
@@ -461,7 +461,7 @@ class ShareASale_Dealsbar_Admin {
 
 			if ( ! $req ) {
 				add_settings_error(
-					'dealsbar_API',
+					'dealsbar_api',
 					'API',
 					'Your API credentials did not work. Check your affiliate ID, key, and token.  <span style = "font-size: 10px">'
 					. $shareasale_api->get_error_msg() .
