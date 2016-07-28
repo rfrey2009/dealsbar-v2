@@ -1,5 +1,4 @@
 jQuery(document).ready(function() {
-  jQuery('tr.dealsbar-option-hidden').css('display','none');
   //setup toolbar slider for sizing customization
   jQuery("#slider").slider({
     slide: function( event, ui ) {

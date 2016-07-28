@@ -40,7 +40,7 @@ class ShareASale_Dealsbar_Admin {
 	}
 
 	public function enqueue_scripts( $hook ) {
-		if ( 'toplevel_page_dealsbar' === $hook || 'shareasale-dealsbar_page_shareasale_dealsbar_customization' === $hook ) {
+		if ( 'shareasale-dealsbar_page_shareasale_dealsbar_customization' === $hook ) {
 				wp_enqueue_script(
 					'shareasale-dealsbar-admin-js',
 					plugin_dir_url( __FILE__ ) . 'js/shareasale-dealsbar-admin.js',

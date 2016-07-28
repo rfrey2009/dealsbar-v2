@@ -21,3 +21,6 @@
 #toolbar-merchants{
     min-height: 150px;
 }
+.dealsbar-option-hidden{
+    display: none;
+}
