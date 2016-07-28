@@ -290,14 +290,39 @@ class ShareASale_Dealsbar_Admin {
 	   	add_submenu_page( $menu_slug, $submenu_page_title, $submenu_title, $capability, $submenu_slug, $submenu_function );
 	}
 
-	//render static templates for settings page
 	public function render_settings_page() {
 		include_once 'options-head.php';
+		//errors are stylized off add_settings_error() from WordPress. Can't be called here since not submitting to options.php.
+		if ( ! function_exists( 'curl_version' ) ) {
+			echo '<div id="setting-error-plugin-depends" class="error settings-error notice is-dismissible"> 
+						<p>
+							<strong>cURL is not enabled on your shop\'s server. Please contact your webhost to have cURL enabled to use automatic reconciliation.</a></strong>
+						</p>
+						<button type="button" class="notice-dismiss">
+							<span class="screen-reader-text">Dismiss this notice.</span>
+						</button>
+					</div>';
+			return;
+		}
+
 		require_once plugin_dir_path( __FILE__ ) . 'templates/shareasale-dealsbar-settings-api.php';
 	}
 
 	public function render_settings_page_submenu() {
 		include_once 'options-head.php';
+		//errors are stylized off add_settings_error() from WordPress. Can't be called here since not submitting to options.php.
+		if ( ! function_exists( 'curl_version' ) ) {
+			echo '<div id="setting-error-plugin-depends" class="error settings-error notice is-dismissible"> 
+						<p>
+							<strong>cURL is not enabled on your shop\'s server. Please contact your webhost to have cURL enabled to use automatic reconciliation.</a></strong>
+						</p>
+						<button type="button" class="notice-dismiss">
+							<span class="screen-reader-text">Dismiss this notice.</span>
+						</button>
+					</div>';
+			return;
+		}
+
 		require_once plugin_dir_path( __FILE__ ) . 'templates/shareasale-dealsbar-settings-dealsbar.php';
 	}
 
@@ -463,27 +488,30 @@ class ShareASale_Dealsbar_Admin {
 		$diff_new_settings = array_diff_assoc( $new_settings, $old_settings );
 
 		if ( isset( $diff_new_settings['affiliate-id'] ) || isset( $diff_new_settings['api-token'] ) || isset( $diff_new_settings['api-secret'] ) ) {
-			//can't easily inject ShareASale_Dealsbar_API $shareasale_api as a ShareASale_Dealsbar_Admin dependency since it relies on values in the $new_settings
 			$shareasale_api = new ShareASale_Dealsbar_API( $new_settings['affiliate-id'], $new_settings['api-token'], $new_settings['api-secret'] );
 			$req = $shareasale_api->token_count()->exec();
 
 			if ( ! $req ) {
 				add_settings_error(
 					'dealsbar_api',
-					'API',
-					'Your API credentials did not work. Check your affiliate ID, key, and token.  <span style = "font-size: 10px">'
+					'api',
+					'Your API credentials did not work. Check your affiliate ID, key, and token.
+					<span style = "font-size: 10px">'
 					. $shareasale_api->get_error_msg() .
 					'</span>'
 				);
 				//if API credentials failed, sanitize those options prior to saving
 				$new_settings['affiliate-id'] = $new_settings['api-token'] = $new_settings['api-secret'] = '';
+				$new_settings['toolbar-setting'] = 0;
 			}
 		}
 		//array order is important to the merge
 		return array_merge( $old_settings, $new_settings );
 	}
-	//hooked to run immediately *after* plugin options are saved to db
-	//so ShareASale_Dealsbar_Updater() hooked to dealsbardealsupdate scheduled action can also check for new credentials and possibly run a fresh sync
+	/*
+	*hooked to run immediately *after* plugin options are saved to db
+	*so ShareASale_Dealsbar_Updater() hooked to dealsbardealsupdate scheduled action can also check for new credentials and possibly run a fresh sync
+	*/
 	public function update_option_dealsbar_options( $old_settings, $new_settings ) {
 		$diff_new_settings = array_diff_assoc( $new_settings, (array) $old_settings );
 		//if first time or different successful API credentials, immediately do a deal sync
