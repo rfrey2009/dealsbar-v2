@@ -96,9 +96,14 @@ class ShareASale_Dealsbar_Toolbar {
 	}
 
 	public function enqueue_styles( $hook ) {
-		if ( ! @$this->settings['toolbar-setting'] || ( is_admin() && 'toplevel_page_dealsbar' !== $hook  ) ) {
+		if ( ! @$this->settings['toolbar-setting'] ) {
 			return;
 		}
+
+		if ( is_admin() && 'toplevel_page_shareasale_dealsbar' !== $hook && 'shareasale-dealsbar_page_shareasale_dealsbar_customization' !== $hook  ) {
+			return;
+		}
+
 		wp_enqueue_style(
 			'font-awesome',
 			plugin_dir_url( __FILE__ ) . 'css/font-awesome.min.css',
@@ -115,9 +120,14 @@ class ShareASale_Dealsbar_Toolbar {
 	}
 
 	public function enqueue_scripts( $hook ) {
-		if ( ! @$this->settings['toolbar-setting'] || ( is_admin() && 'toplevel_page_dealsbar' !== $hook ) ) {
+		if ( ! @$this->settings['toolbar-setting'] ) {
 			return;
 		}
+
+		if ( is_admin() && 'toplevel_page_shareasale_dealsbar' !== $hook && 'shareasale-dealsbar_page_shareasale_dealsbar_customization' !== $hook  ) {
+			return;
+		}
+
 		wp_enqueue_script(
 			'dealsbar-deals-toolbar',
 			plugin_dir_url( __FILE__ ) . 'js/shareasale-dealsbar-toolbar.js',

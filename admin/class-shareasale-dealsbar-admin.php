@@ -19,7 +19,7 @@ class ShareASale_Dealsbar_Admin {
 	}
 
 	public function enqueue_styles( $hook ) {
-		if ( 'toplevel_page_dealsbar' === $hook || 'shareasale-dealsbar_page_shareasale_dealsbar_customization' === $hook ) {
+		if ( 'toplevel_page_shareasale_dealsbar' === $hook || 'shareasale-dealsbar_page_shareasale_dealsbar_customization' === $hook ) {
 				wp_enqueue_style(
 					'shareasale-dealsbar-admin-css',
 					plugin_dir_url( __FILE__ ) . 'css/shareasale-dealsbar-admin.css',

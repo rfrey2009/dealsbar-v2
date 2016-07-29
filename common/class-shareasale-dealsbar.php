@@ -53,7 +53,10 @@ class ShareASale_Dealsbar {
 		$this->loader->add_action( 'admin_enqueue_scripts',               $this->toolbar, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts',               $this->toolbar, 'enqueue_scripts' );
 		$this->loader->add_action( 'admin_enqueue_scripts',               $this->toolbar, 'render_custom_css' );
-		$this->loader->add_action( 'admin_footer-toplevel_page_dealsbar', $this->toolbar, 'render_toolbar' );
+
+		$this->loader->add_action( 'admin_footer-toplevel_page_shareasale_dealsbar',                          $this->toolbar, 'render_toolbar' );
+		$this->loader->add_action( 'admin_footer-shareasale-dealsbar_page_shareasale_dealsbar_customization', $this->toolbar, 'render_toolbar' );
+
 		//admin filters
 		$this->loader->add_filter( 'plugin_action_links_' . SHAREASALE_DEALSBAR_PLUGIN_FILENAME, $admin, 'render_settings_shortcut' );
 	}
