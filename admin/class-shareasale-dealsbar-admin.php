@@ -478,7 +478,7 @@ class ShareASale_Dealsbar_Admin {
 
 	//add shortcut to settings page from the plugin admin entry for dealsbar
 	public function render_settings_shortcut( $links ) {
-		$settings_link = '<a href="' . get_bloginfo( 'wpurl' ) . '/wp-admin/admin.php?page=dealsbar">Settings</a>';
+		$settings_link = '<a href="' . get_bloginfo( 'wpurl' ) . '/wp-admin/admin.php?page=shareasale_dealsbar">Settings</a>';
 		array_unshift( $links, $settings_link );
 		return $links;
 	}
