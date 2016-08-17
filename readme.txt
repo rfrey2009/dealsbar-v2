@@ -25,6 +25,7 @@ Finally, click save settings again and you'll see your new Dealsbar populated wi
 == Changelog ==
 
 = 2.0 =
+* NOTE: You will likely need to re-input your dealsbar customization and API settings!
 * Second release
 * Plugin re-written for performance, security, and ease of future updating
 * Added a setting for custom subid/Affiliate-defined tracking values in dealsbar links
