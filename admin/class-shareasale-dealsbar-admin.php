@@ -484,7 +484,7 @@ class ShareASale_Dealsbar_Admin {
 	}
 	//mainly to sanitize the incoming API credential inputs and check if they're valid
 	public function sanitize_settings( $new_settings = array() ) {
-		$old_settings      = get_option( 'dealsbar_options' ) ?: array();
+		$old_settings      = get_option( 'dealsbar_options' ) ? get_option( 'dealsbar_options' ) : array();
 		$diff_new_settings = array_diff_assoc( $new_settings, $old_settings );
 
 		if ( isset( $diff_new_settings['affiliate-id'] ) || isset( $diff_new_settings['api-token'] ) || isset( $diff_new_settings['api-secret'] ) ) {
