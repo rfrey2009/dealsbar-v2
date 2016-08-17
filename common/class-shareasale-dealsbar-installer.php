@@ -9,11 +9,11 @@ class ShareASale_Dealsbar_Installer {
 	public static function install() {
 		self::load_dependencies();
 
-		add_option( 'dealsbar_options', '' );
+		update_option( 'dealsbar_options', '' );
 
 		global $wpdb;
 		$deals_table = $wpdb->prefix . 'deals';
-		$query = 'CREATE TABLE ' . $deals_table . ' (
+		$query = 'CREATE TABLE IF NOT EXISTS ' . $deals_table . ' (
 			dealid BIGINT( 25 ) NOT NULL ,
 			merchantid INT( 10 ) NOT NULL ,
 			merchant VARCHAR( 255 ) NOT NULL ,
