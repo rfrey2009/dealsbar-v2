@@ -10,7 +10,7 @@ class ShareASale_Dealsbar {
 
 	public function __construct() {
 		$this->plugin_slug = 'shareasale-dealsbar-slug';
-		$this->version     = '1.2';
+		$this->version     = '2.0';
 
 		$this->load_dependencies();
 

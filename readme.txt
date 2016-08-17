@@ -2,7 +2,7 @@
 Tags: Affiliate, marketing, ShareASale
 Requires at least: 3.0.1
 Tested up to: 4.6
-Stable tag: 1.2
+Stable tag: 2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -24,7 +24,7 @@ Finally, click save settings again and you'll see your new Dealsbar populated wi
 
 == Changelog ==
 
-= 1.2 =
+= 2.0 =
 * Second release
 * Plugin re-written for performance, security, and ease of future updating
 * Added a setting for custom subid/Affiliate-defined tracking values in dealsbar links
