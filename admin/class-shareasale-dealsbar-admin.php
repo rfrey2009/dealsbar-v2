@@ -20,7 +20,7 @@ class ShareASale_Dealsbar_Admin {
 	/* for backwards compatibility with v1.0's old settings slug... */
 	public function admin_page_access_denied() {
 		if ( isset( $_GET['page'] ) && 'dealsbar' === $_GET['page'] ) {
-			$new_settings_url = menu_page_url( 'shareasale_dealsbar' );
+			$new_settings_url = menu_page_url( 'shareasale_dealsbar', false );
 			wp_redirect( $new_settings_url );
 			exit;
 		}
