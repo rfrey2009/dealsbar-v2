@@ -25,6 +25,7 @@ class ShareASale_Dealsbar_Toolbar {
 
 	private function get_deals( $merchants ) {
 		$deals_table = $this->wpdb->prefix . 'deals';
+		$afftrack    = @$this->settings['toolbar-afftrack'];
 
 		if ( ! empty( $merchants ) ) {
 			$sql = '
@@ -36,13 +37,13 @@ class ShareASale_Dealsbar_Toolbar {
 			// Call $this->wpdb->prepare passing the values of the array as separate arguments
 			$query = call_user_func_array( array( $this->wpdb, 'prepare' ), array_merge( array( $sql ), $merchants ) );
 			//get the results, and decode all deal titles HTML entities ahead while adding a dynamic afftrack value
-			$deals = array_map( function( $obj ) {
+			$deals = array_map( function( $obj ) use ( $afftrack ) {
 							$deal = array();
 							$deal['toolbar-deal-title']    = html_entity_decode( $obj->title );
-							$deal['toolbar-deal-link']     = $obj->trackingurl . '&afftrack=' . @$this->settings['toolbar-afftrack'];
+							$deal['toolbar-deal-link']     = $obj->trackingurl . '&afftrack=' . $afftrack;
 							$deal['toolbar-deal-merchant'] = $obj->merchant;
 							return $deal;
-						}, $this->wpdb->get_results( $query )
+				}, $this->wpdb->get_results( $query )
 			);
 			return $deals;
 		} else {
