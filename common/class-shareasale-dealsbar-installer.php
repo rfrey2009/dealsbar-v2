@@ -9,7 +9,7 @@ class ShareASale_Dealsbar_Installer {
 	public static function install() {
 		self::load_dependencies();
 
-		update_option( 'dealsbar_options', '' );
+		add_option( 'dealsbar_options', '' );
 
 		global $wpdb;
 		$deals_table = $wpdb->prefix . 'deals';
