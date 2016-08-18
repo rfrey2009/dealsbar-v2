@@ -1,5 +1,6 @@
 #dealsbar-deals-toolbar{
 	display: table;
+	left: 0;
     position: fixed;
     text-align: center;
     width: 100%;
