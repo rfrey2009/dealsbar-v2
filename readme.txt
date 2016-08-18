@@ -2,7 +2,7 @@
 Tags: Affiliate, marketing, ShareASale
 Requires at least: 3.0.1
 Tested up to: 4.6
-Stable tag: 2.0
+Stable tag: 2.0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -23,6 +23,12 @@ Most important, pick some of your merchants from the select menu whose deals you
 Finally, click save settings again and you'll see your new Dealsbar populated with deals that will earn you commissions when they turn into sales!
 
 == Changelog ==
+
+= 2.0.2 =
+* Update to coupon/deals syncing in case a Merchant has oddly named deal descriptions. Thanks, Marcia!
+
+= 2.0.1 =
+* Small tweaks to make upgrade from v1.0 smoother for certain users.
 
 = 2.0 =
 * NOTE: You will likely need to re-input your dealsbar customization and API settings!

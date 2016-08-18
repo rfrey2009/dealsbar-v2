@@ -43,7 +43,7 @@ class ShareASale_Dealsbar_Toolbar {
 							$deal['toolbar-deal-link']     = $obj->trackingurl . '&afftrack=' . $afftrack;
 							$deal['toolbar-deal-merchant'] = $obj->merchant;
 							return $deal;
-				}, $this->wpdb->get_results( $query )
+						}, $this->wpdb->get_results( $query )
 			);
 			return $deals;
 		} else {

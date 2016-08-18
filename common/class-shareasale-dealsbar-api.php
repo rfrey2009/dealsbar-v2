@@ -84,7 +84,7 @@ class ShareASale_Dealsbar_API {
 		//set last_query property and clear out current query property
 		$this->last_query = $this->query;
 		$this->query      = '';
-		if ( stripos( $response, 'Error' ) ) {
+		if ( strpos( $response, 'Error Code' ) ) {
 			// error occurred... store it and return false
 			$this->error_msg = trim( $response );
 			return false;

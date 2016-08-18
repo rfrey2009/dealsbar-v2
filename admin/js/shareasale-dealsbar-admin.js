@@ -19,6 +19,7 @@ jQuery(document).ready(function() {
       jQuery('td > .wp-picker-container').hide();
       jQuery('#toolbar-custom-css').prop('disabled', true);
       jQuery('#toolbar-merchants').prop('disabled',true);
+      jQuery('#toolbar-afftrack').prop('disabled',true);
     }else if(this.checked){
       jQuery('#toolbar-text').prop('disabled', false);
       jQuery("#slider").slider( "option", "disabled", false );
@@ -28,6 +29,7 @@ jQuery(document).ready(function() {
       jQuery('td > .wp-picker-container').show();
       jQuery('#toolbar-custom-css').prop('disabled', false);
       jQuery('#toolbar-merchants').prop('disabled',false);
+      jQuery('#toolbar-afftrack').prop('disabled',false);
     }
   });
   //if user uses text input instead of slider, reflect changes in slider too...

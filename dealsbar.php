@@ -2,7 +2,7 @@
 	/*
 	* Plugin Name: ShareASale Dealsbar
 	* Description: Put a custom toolbar on your site populated with ShareASale Merchant deals!
-	* Version: 2.0
+	* Version: 2.0.2
 	* Author: ShareASale
 	* License: GPLv2 or later
 	*/

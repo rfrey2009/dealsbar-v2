@@ -10,7 +10,7 @@ class ShareASale_Dealsbar {
 
 	public function __construct() {
 		$this->plugin_slug = 'shareasale-dealsbar-slug';
-		$this->version     = '2.0.1';
+		$this->version     = '2.0.2';
 
 		$this->load_dependencies();
 
@@ -51,9 +51,9 @@ class ShareASale_Dealsbar {
 		$this->loader->add_action( 'update_option_dealsbar_options', $admin, 'update_option_dealsbar_options', array( 'priority' => 10, 'args' => 2 ) );
 		$this->loader->add_action( 'admin_page_access_denied' ,      $admin, 'admin_page_access_denied' );
 		//admin facing toolbar actions
-		$this->loader->add_action( 'admin_enqueue_scripts',               $this->toolbar, 'enqueue_styles' );
-		$this->loader->add_action( 'admin_enqueue_scripts',               $this->toolbar, 'enqueue_scripts' );
-		$this->loader->add_action( 'admin_enqueue_scripts',               $this->toolbar, 'render_custom_css' );
+		$this->loader->add_action( 'admin_enqueue_scripts', $this->toolbar, 'enqueue_styles' );
+		$this->loader->add_action( 'admin_enqueue_scripts', $this->toolbar, 'enqueue_scripts' );
+		$this->loader->add_action( 'admin_enqueue_scripts', $this->toolbar, 'render_custom_css' );
 
 		$this->loader->add_action( 'admin_footer-toplevel_page_shareasale_dealsbar',                          $this->toolbar, 'render_toolbar' );
 		$this->loader->add_action( 'admin_footer-shareasale-dealsbar_page_shareasale_dealsbar_customization', $this->toolbar, 'render_toolbar' );
