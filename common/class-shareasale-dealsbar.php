@@ -10,7 +10,7 @@ class ShareASale_Dealsbar {
 
 	public function __construct() {
 		$this->plugin_slug = 'shareasale-dealsbar-slug';
-		$this->version     = '2.0';
+		$this->version     = '2.0.1';
 
 		$this->load_dependencies();
 
@@ -49,6 +49,7 @@ class ShareASale_Dealsbar {
 		$this->loader->add_action( 'admin_init',                     $admin, 'admin_init' );
 		$this->loader->add_action( 'admin_menu',                     $admin, 'admin_menu' );
 		$this->loader->add_action( 'update_option_dealsbar_options', $admin, 'update_option_dealsbar_options', array( 'priority' => 10, 'args' => 2 ) );
+		$this->loader->add_action( 'admin_page_access_denied' ,      $admin, 'admin_page_access_denied' );
 		//admin facing toolbar actions
 		$this->loader->add_action( 'admin_enqueue_scripts',               $this->toolbar, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts',               $this->toolbar, 'enqueue_scripts' );

@@ -17,6 +17,14 @@ class ShareASale_Dealsbar_Admin {
 
 		$this->wpdb = &$wpdb;
 	}
+	/* for backwards compatibility with v1.0's old settings slug... */
+	public function admin_page_access_denied() {
+		if ( isset( $_GET['page'] ) && 'dealsbar' === $_GET['page'] ) {
+			$new_settings_url = menu_page_url( 'shareasale_dealsbar' );
+			wp_redirect( $new_settings_url );
+			exit;
+		}
+	}
 
 	public function enqueue_styles( $hook ) {
 		if ( 'toplevel_page_shareasale_dealsbar' === $hook || 'shareasale-dealsbar_page_shareasale_dealsbar_customization' === $hook ) {
