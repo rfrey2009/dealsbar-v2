@@ -1,4 +1,8 @@
 <?php
+if ( ! defined( 'WPINC' ) ) {
+	die;
+}
+
 class ShareASale_Dealsbar_Admin {
 	/**
 	* @var Wpdb $wpdb WordPress global database connection singleton
@@ -285,7 +289,7 @@ class ShareASale_Dealsbar_Admin {
 		$capability = 'manage_options';
 		$menu_slug  = 'shareasale_dealsbar';
 		$function   = array( $this, 'render_settings_page' );
-		$icon_url   = plugin_dir_url( __FILE__ ) . 'images/star_big2.png';
+		$icon_url   = 'dashicons-star-filled';
 		add_menu_page( $page_title, $menu_title, $capability, $menu_slug, $function, $icon_url );
 
 		$sub_menu_title = 'API Settings';

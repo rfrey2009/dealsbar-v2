@@ -1,3 +1,9 @@
+<?php
+if ( ! defined( 'WPINC' ) ) {
+	die;
+}
+?>
+
 <div id = "shareasale-dealsbar">
 	<div class = "wrap">    
 		<h2>

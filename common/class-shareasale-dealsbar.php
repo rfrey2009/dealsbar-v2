@@ -1,4 +1,8 @@
 <?php
+if ( ! defined( 'WPINC' ) ) {
+	die;
+}
+
 class ShareASale_Dealsbar {
 	/**
 	* @var ShareASale_Dealsbar_Toolbar $toolbar object that controls the state, type (admin or frontend), and rendering of dealsbar toolbar itself
@@ -10,7 +14,7 @@ class ShareASale_Dealsbar {
 
 	public function __construct() {
 		$this->plugin_slug = 'shareasale-dealsbar-slug';
-		$this->version     = '2.0.2';
+		$this->version     = '2.0.3';
 
 		$this->load_dependencies();
 

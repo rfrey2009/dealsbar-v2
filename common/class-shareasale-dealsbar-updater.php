@@ -1,4 +1,8 @@
 <?php
+if ( ! defined( 'WPINC' ) ) {
+	die;
+}
+
 class ShareASale_Dealsbar_Updater {
 	/**
 	* @var Wpdb $wpdb WordPress global database connection singleton

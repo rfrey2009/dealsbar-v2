@@ -1,4 +1,8 @@
 <?php
+if ( ! defined( 'WPINC' ) ) {
+	die;
+}
+
 class ShareASale_Dealsbar_Installer {
 
 	private static function load_dependencies() {
